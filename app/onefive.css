@@ -371,6 +371,7 @@ html {
     margin-right: -7%;
     translate: calc(var(--of-marca-x, 0%) + var(--mx, 0) * 16px) calc(var(--my, 0) * 16px);
     transition: translate .9s var(--ease-soft);
+    will-change: translate;
 }
 
 /* aura: disco cônico das cinco cores, girando e respirando */
@@ -379,6 +380,7 @@ html {
     background: var(--grad-five-conic);
     filter: blur(70px); mix-blend-mode: multiply;
     animation: ofh-spin 26s linear infinite, ofh-aura-pulse 9s ease-in-out infinite;
+    will-change: transform;
 }
 /* com a arte em alfa a aura não é mais encoberta: metade da força de antes,
    senão ela tinge a fumaça e puxa o lado direito todo para uma cor só */
@@ -389,6 +391,7 @@ html {
 .of-hero .of-rays {
     position: absolute; inset: -60%; pointer-events: none;
     animation: ofh-spin 44s linear infinite reverse;
+    will-change: transform;
 }
 .of-hero .of-rays span {
     position: absolute; left: 50%; top: 50%;
@@ -405,6 +408,7 @@ html {
     position: absolute; border-radius: 50%;
     border: 1px dashed rgba(42, 21, 69, .13);
     animation: ofh-spin var(--d, 30s) linear infinite;
+    will-change: transform;
 }
 .of-hero .of-orbit > i {
     position: absolute; top: -5px; left: 50%;
