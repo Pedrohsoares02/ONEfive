@@ -1067,6 +1067,7 @@ html {
     transform-origin: 300px 300px;
     transition: opacity .5s, filter .45s, transform .55s var(--ease-out-expo);
     filter: drop-shadow(0 .4rem .75rem rgba(39,16,68,.12));
+    outline: none;
 }
 .of-frentes .of-f2-fatia:hover,
 .of-frentes .of-f2-fatia.ativa {
@@ -1074,6 +1075,7 @@ html {
     transform: scale(1.025);
 }
 .of-frentes .of-f2-roda.tem-ativa .of-f2-fatia:not(.ativa) { opacity: .46; }
+.of-frentes .of-f2-fatia:focus,
 .of-frentes .of-f2-fatia:focus-visible {
     outline: none;
     filter: drop-shadow(0 0 1rem var(--c)) drop-shadow(0 0 .3rem #fff);
@@ -1612,14 +1614,14 @@ html {
     filter: blur(18px); opacity: .18;
     transition: opacity .9s var(--ease-soft);
 }
-.of-final__card:hover::before { opacity: .55; }
+.of-final__card:hover::before { opacity: .18; }
 /* feixe cônico percorrendo a borda, como no modelo */
 .of-final__beam {
     position: absolute; inset: -1px; z-index: -1; border-radius: inherit;
     overflow: hidden; opacity: 0;
     transition: opacity .5s var(--ease-soft);
 }
-.of-final__card:hover .of-final__beam { opacity: 1; }
+.of-final__card:hover .of-final__beam { opacity: 0; }
 .of-final__beam::before {
     content: ""; position: absolute; left: 50%; top: 50%;
     width: 220%; aspect-ratio: 1; transform: translate(-50%, -50%);
