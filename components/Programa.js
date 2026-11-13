@@ -126,7 +126,7 @@ export default function Programa({
             const gavId = `of-gav-${linha.numero}`;
             const isAberta = aberta === linha.id;
             return (
-              <div className="of-linha" id={linha.id} style={{ '--c': `var(${linha.cor})` }} key={linha.id}>
+              <div className={`of-linha${isAberta ? ' is-aberta' : ''}`} id={linha.id} style={{ '--c': `var(${linha.cor})` }} key={linha.id}>
                 <span className="of-linha__fundo" aria-hidden="true" />
                 <button
                   type="button"
@@ -142,7 +142,7 @@ export default function Programa({
                   </span>
                   <span className="of-linha__mais" aria-hidden="true" />
                 </button>
-                <div className={`of-linha__gav${isAberta ? ' is-aberta' : ''}`} id={gavId} role="region" aria-label={linha.titulo}>
+                <div className="of-linha__gav" id={gavId} role="region" aria-label={linha.titulo}>
                   <div className="of-linha__in">
                     <div className="of-linha__corpo">
                       <div className="of-bl">
