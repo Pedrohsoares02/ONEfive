@@ -485,3 +485,12 @@ dialog.pn-janela::backdrop { background: rgba(42, 21, 69, .42); backdrop-filter:
 @media (max-width: 860px) {
     .pn-fundo img { height: auto; width: 170%; right: -35%; opacity: .22; }
 }
+
+/* O título da ficha é editável. O botão precisa fluir como texto: em
+   inline-block ele vira uma caixa, e o ponto do h1::after ia parar solto à
+   direita da caixa em vez de colado na última palavra. */
+.pn-tela h1 .pn-edit,
+.pn-tela h1 .pn-edit__ver { display: inline; }
+
+/* Nos dados da ficha, "R$ 38.000" e "Ricardo Soares" não quebram no meio */
+.pn-dados .pn-edit__ver { white-space: nowrap; }

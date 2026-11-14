@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation.js';
 
 import { somarPorTipo, margem, aReceber } from '@/lib/financeiro.js';
@@ -13,6 +13,11 @@ export default function Financeiro({ negocioId, lancamentos }) {
   const [lista, definirLista] = useState(lancamentos);
   const [erro, definirErro] = useState(null);
   const router = useRouter();
+
+  /* A lista pintada na hora é local, para a tela responder sem esperar o
+     servidor. Quando o servidor devolve a versão nova, ela tem de assumir:
+     sem isto, o que foi criado só aparecia ao recarregar a página. */
+  useEffect(() => { definirLista(lancamentos); }, [lancamentos]);
 
   const receita = somarPorTipo(lista, 'receita');
   const custo = somarPorTipo(lista, 'custo');

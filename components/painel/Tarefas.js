@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation.js';
 
 import CampoEditavel from '@/components/painel/CampoEditavel.js';
@@ -16,6 +16,11 @@ export default function Tarefas({ negocioId, tarefas }) {
   const [lista, definirLista] = useState(tarefas);
   const [erro, definirErro] = useState(null);
   const router = useRouter();
+
+  /* A lista pintada na hora é local, para a tela responder sem esperar o
+     servidor. Quando o servidor devolve a versão nova, ela tem de assumir:
+     sem isto, o que foi criado só aparecia ao recarregar a página. */
+  useEffect(() => { definirLista(tarefas); }, [tarefas]);
 
   function avisar(resposta) {
     definirErro(resposta?.erro ?? null);
