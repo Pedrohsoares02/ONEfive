@@ -460,30 +460,32 @@ dialog.pn-janela::backdrop { background: rgba(42, 21, 69, .42); backdrop-filter:
     overflow: hidden; pointer-events: none;
 }
 .pn-fundo img {
-    position: absolute; right: -10%; top: 50%; translate: 0 -50%;
-    height: 118%; width: auto; max-width: none;
+    position: absolute; right: -12%; top: 50%; translate: 0 -50%;
+    height: 128%; width: auto; max-width: none;
     /* o desfoque é o vidro; a saturação baixa tira o brilho de vitrine */
-    filter: blur(30px) saturate(.6);
-    opacity: .3;
+    filter: blur(22px) saturate(.82);
+    opacity: .62;
     /* some antes de encostar nas bordas, em vez de terminar num corte reto */
-    -webkit-mask-image: radial-gradient(60% 60% at 50% 50%, #000 30%, transparent 78%);
-    mask-image: radial-gradient(60% 60% at 50% 50%, #000 30%, transparent 78%);
+    -webkit-mask-image: radial-gradient(64% 64% at 50% 50%, #000 34%, transparent 82%);
+    mask-image: radial-gradient(64% 64% at 50% 50%, #000 34%, transparent 82%);
 }
-/* o vidro em si: um véu claro por cima de tudo */
+/* O vidro: forte do lado do texto, quase ausente na direita, onde só há
+   fundo. É o que mantém a leitura sem apagar a lâmpada. */
 .pn-fundo::after {
     content: ''; position: absolute; inset: 0;
     background: linear-gradient(100deg,
-        rgba(248, 247, 251, .95) 0%,
-        rgba(248, 247, 251, .88) 38%,
-        rgba(248, 247, 251, .74) 62%,
-        rgba(248, 247, 251, .66) 100%);
+        rgba(248, 247, 251, .94) 0%,
+        rgba(248, 247, 251, .86) 34%,
+        rgba(248, 247, 251, .62) 54%,
+        rgba(248, 247, 251, .34) 74%,
+        rgba(248, 247, 251, .18) 100%);
 }
 
 /* o conteúdo e a barra ficam acima do fundo */
 .pn-tela { position: relative; z-index: 1; }
 
 @media (max-width: 860px) {
-    .pn-fundo img { height: auto; width: 170%; right: -35%; opacity: .22; }
+    .pn-fundo img { height: auto; width: 180%; right: -40%; opacity: .4; }
 }
 
 /* O título da ficha é editável. O botão precisa fluir como texto: em
