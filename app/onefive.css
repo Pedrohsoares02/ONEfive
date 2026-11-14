@@ -2083,6 +2083,19 @@ html.of-modal-aberto, body.of-modal-aberto { overflow: hidden; }
 /* abaixo de 560px o CTA escrito não cabe ao lado da logo: vai para o painel */
 @media (max-width: 560px) { .of-topo nav .of-topo__cta { display: none; } }
 
+/* Acesso ao painel interno: visível, mas sem competir com o CTA comercial. */
+.of-topo nav .of-topo__entrar {
+    padding: .4rem .85rem;
+    border: 1px solid rgba(42, 21, 69, .2);
+    border-radius: 999px;
+    color: var(--tinta);
+}
+.of-topo nav .of-topo__entrar::after { content: none; }
+.of-topo nav .of-topo__entrar:hover { color: #E6186F; border-color: #E6186F; }
+.of-noite .of-topo nav .of-topo__entrar { color: #fff; border-color: rgba(255, 255, 255, .3); }
+.of-noite .of-topo nav .of-topo__entrar:hover { color: #E6186F; border-color: #E6186F; }
+@media (max-width: 560px) { .of-topo nav .of-topo__entrar { display: none; } }
+
 .of-menu {
     position: fixed; inset: 0; z-index: 895;
     display: grid; align-content: center;

@@ -331,6 +331,11 @@ export default function Topo() {
               {l.txt}
             </a>
           ))}
+          {/* Acesso ao painel interno. <a> comum e não <Link>: o painel é
+              área logada, e o prefetch do Link bateria no proxy a cada hover. */}
+          <a className="of-topo__entrar" href="/painel">
+            Entrar
+          </a>
           <button className="of-topo__menu" id="of-menu-btn" type="button" aria-expanded="false" aria-controls="of-menu" aria-label="Abrir menu">
             <span aria-hidden="true" />
             <span aria-hidden="true" />
@@ -346,6 +351,10 @@ export default function Topo() {
               <span>{l.txt}</span>
             </a>
           ))}
+          <a href="/painel">
+            <i aria-hidden="true">{String(LINKS.length + 1).padStart(2, '0')}</i>
+            <span>Entrar no painel</span>
+          </a>
         </nav>
       </div>
 
