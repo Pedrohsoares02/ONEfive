@@ -1,12 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { criarNegocio, salvarCampo } from '../lib/negocios.js';
+import { criarNegocio, salvarCampo, apagarNegocio } from '../lib/negocios.js';
 
 /* Banco de mentira: guarda o que foi gravado para o teste conferir. */
 function bancoFalso({ usuario = { id: 'u1' }, pessoa = { id: 'u1', nome: 'Ricardo', papel: 'admin', ativo: true },
                       clientesExistentes = [] } = {}) {
-  const gravou = { cliente: [], negocio: [], update: [] };
+  const gravou = { cliente: [], negocio: [], update: [], delete: [] };
   return {
     gravou,
     auth: { getUser: async () => ({ data: { user: usuario }, error: null }) },
@@ -40,6 +40,9 @@ function bancoFalso({ usuario = { id: 'u1' }, pessoa = { id: 'u1', nome: 'Ricard
           gravou.update.push(valores);
           return { eq: async () => ({ error: null }) };
         },
+        delete: () => ({
+          eq: async (_col, id) => { gravou.delete.push(id); return { error: null }; },
+        }),
       };
     },
   };
@@ -107,4 +110,25 @@ test('salvarCampo sem sessão não grava nada', async () => {
   const b = bancoFalso({ usuario: null, pessoa: null });
   await assert.rejects(() => salvarCampo(b, 'neg-1', 'observacoes', 'oi'), /NEXT_REDIRECT/);
   assert.deepEqual(b.gravou.update, []);
+});
+
+test('apagarNegocio sem sessão não apaga nada', async () => {
+  const b = bancoFalso({ usuario: null, pessoa: null });
+  await assert.rejects(() => apagarNegocio(b, 'neg-1'), /NEXT_REDIRECT/);
+  assert.deepEqual(b.gravou.delete, []);
+});
+
+test('apagarNegocio recusa quem não é admin, com recado claro', async () => {
+  // A regra do banco já barra, mas em silêncio: o delete volta sem erro e
+  // sem linha apagada. Sem esta checagem o cartão sumia da tela e voltava.
+  const b = bancoFalso({ pessoa: { id: 'u1', nome: 'Leo', papel: 'leitor', ativo: true } });
+  await assert.rejects(() => apagarNegocio(b, 'neg-1'), /admin/i);
+  assert.deepEqual(b.gravou.delete, []);
+});
+
+test('apagarNegocio apaga para admin', async () => {
+  const b = bancoFalso();
+  const r = await apagarNegocio(b, 'neg-1');
+  assert.deepEqual(r, { ok: true });
+  assert.equal(b.gravou.delete.length, 1);
 });

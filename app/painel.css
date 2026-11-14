@@ -496,3 +496,28 @@ dialog.pn-janela::backdrop { background: rgba(42, 21, 69, .42); backdrop-filter:
 
 /* Nos dados da ficha, "R$ 38.000" e "Ricardo Soares" não quebram no meio */
 .pn-dados .pn-edit__ver { white-space: nowrap; }
+
+/* ---------- início: os cartões levam à ficha ---------- */
+.pn-lista-seca { list-style: none; margin: 0; padding: 0; }
+.pn-lista-seca .pn-cartao { text-decoration: none; }
+.pn-lista-seca .pn-cliente,
+.pn-lista-seca .pn-tit,
+.pn-lista-seca .pn-pe { display: block; }
+
+/* links escritos no meio de uma frase precisam parecer links */
+.pn-vazio a, .pn-nota a {
+    color: var(--vivo); text-decoration: underline; text-underline-offset: 3px;
+}
+.pn-vazio a:hover, .pn-nota a:hover { color: var(--risk); }
+
+/* ---------- apagar ---------- */
+.pn-acao--perigo { background: var(--card); color: var(--risk); border-color: rgba(201, 20, 94, .35); }
+.pn-acao--perigo:hover { background: var(--risk); color: #fff; border-color: var(--risk); }
+.pn-acao--perigo:disabled { opacity: .65; cursor: progress; }
+
+.pn-confirma {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    padding: 10px 14px; border-radius: 10px;
+    border: 1px solid rgba(201, 20, 94, .3); background: rgba(201, 20, 94, .05);
+}
+.pn-confirma__texto { font-size: 13.5px; color: var(--ink); }

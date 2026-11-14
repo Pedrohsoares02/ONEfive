@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
-import { moverEtapa, criarNegocio, salvarCampo } from '@/lib/negocios.js';
+import { moverEtapa, criarNegocio, salvarCampo, apagarNegocio } from '@/lib/negocios.js';
 import { criarTarefa, moverTarefa, renomearTarefa, apagarTarefa } from '@/lib/tarefas.js';
 import { criarLancamento, apagarLancamento } from '@/lib/lancamentos.js';
 import { ehRedirecionamento } from '@/lib/erros.js';
@@ -35,6 +35,10 @@ export async function criarNegocioAcao(dados) {
 
 export async function salvarCampoAcao(negocioId, campo, valor) {
   return executar((c) => salvarCampo(c, negocioId, campo, valor));
+}
+
+export async function apagarNegocioAcao(negocioId) {
+  return executar((c) => apagarNegocio(c, negocioId));
 }
 
 export async function criarTarefaAcao(negocioId, dados) {

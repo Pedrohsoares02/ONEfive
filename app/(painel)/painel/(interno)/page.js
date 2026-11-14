@@ -44,12 +44,14 @@ export default async function PaginaInicio() {
           <Link href="/painel/projetos">Projetos</Link>.
         </p>
       ) : (
-        <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+        <ul className="pn-lista-seca">
           {meus.map((n) => (
-            <li key={n.id} className="pn-cartao" style={{ cursor: 'default' }}>
-              <div className="pn-cliente">{n.cliente?.nome || 'Sem cliente'}</div>
-              <div className="pn-tit">{n.titulo}</div>
-              <div className="pn-pe"><span className="pn-sub">{n.etapa}</span></div>
+            <li key={n.id}>
+              <Link className="pn-cartao" href={`/painel/negocio/${n.id}`}>
+                <span className="pn-cliente">{n.cliente?.nome || 'Sem cliente'}</span>
+                <span className="pn-tit">{n.titulo}</span>
+                <span className="pn-pe"><span className="pn-sub">{n.etapa}</span></span>
+              </Link>
             </li>
           ))}
         </ul>

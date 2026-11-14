@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation.js';
 
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
-import { exigirUsuario } from '@/lib/sessao.js';
+import { exigirUsuario, ehAdmin } from '@/lib/sessao.js';
 import { listarPessoas } from '@/lib/consultas.js';
 import { ehLead, ETAPAS_LEAD, ETAPAS_PROJETO } from '@/lib/funil.js';
 import CampoDoNegocio from '@/components/painel/CampoDoNegocio.js';
 import Tarefas from '@/components/painel/Tarefas.js';
 import Financeiro from '@/components/painel/Financeiro.js';
+import ApagarNegocio from '@/components/painel/ApagarNegocio.js';
 
 // Página de usuário logado: lê cookie de sessão, nada aqui pode ser
 // pré-renderizado. Rota bloqueante é o comportamento correto.
@@ -17,7 +18,7 @@ export default async function PaginaNegocio({ params }) {
   const { id } = await params;
 
   const cliente = await criarClienteServidor();
-  await exigirUsuario(cliente);
+  const pessoa = await exigirUsuario(cliente);
 
   const { data: negocio } = await cliente
     .from('negocio')
@@ -80,6 +81,14 @@ export default async function PaginaNegocio({ params }) {
           </h1>
           <p className="pn-sub">{negocio.cliente?.nome || 'Sem cliente'}</p>
         </div>
+
+        {ehAdmin(pessoa) && (
+          <ApagarNegocio
+            negocioId={negocio.id}
+            titulo={negocio.titulo}
+            voltarPara={lead ? '/painel/leads' : '/painel/projetos'}
+          />
+        )}
       </div>
 
       <dl className="pn-dados">
