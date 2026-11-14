@@ -1,17 +1,16 @@
 import { notFound } from 'next/navigation.js';
+
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { exigirUsuario } from '@/lib/sessao.js';
-import { somarPorTipo, margem, aReceber } from '@/lib/financeiro.js';
-import { ehLead } from '@/lib/funil.js';
+import { listarPessoas } from '@/lib/consultas.js';
+import { ehLead, ETAPAS_LEAD, ETAPAS_PROJETO } from '@/lib/funil.js';
+import CampoDoNegocio from '@/components/painel/CampoDoNegocio.js';
+import Tarefas from '@/components/painel/Tarefas.js';
+import Financeiro from '@/components/painel/Financeiro.js';
 
 // Página de usuário logado: lê cookie de sessão, nada aqui pode ser
 // pré-renderizado. Rota bloqueante é o comportamento correto.
 export const instant = false;
-
-const real = (v) =>
-  'R$ ' + Number(v || 0).toLocaleString('pt-BR', { maximumFractionDigits: 0 });
-
-const dataBr = (d) => (d ? d.split('-').reverse().join('/') : '—');
 
 export default async function PaginaNegocio({ params }) {
   // No Next 16 params é assíncrono.
@@ -23,104 +22,108 @@ export default async function PaginaNegocio({ params }) {
   const { data: negocio } = await cliente
     .from('negocio')
     .select(
-      'id, codigo, titulo, etapa, valor_previsto, probabilidade, data_contato, fechamento_previsto, inicio, prazo, motivo_perda, observacoes, cliente:cliente_id (nome), dono:dono_id (nome)'
+      'id, codigo, titulo, etapa, valor_previsto, dono_id, data_contato, fechamento_previsto, inicio, prazo, motivo_perda, observacoes, cliente:cliente_id (nome)'
     )
     .eq('id', id)
     .maybeSingle();
 
   if (!negocio) notFound();
 
-  const { data: eventos } = await cliente
-    .from('evento')
-    .select('id, acao, detalhe, criado_em, autor:autor_id (nome)')
-    .eq('negocio_id', id)
-    .order('criado_em', { ascending: false });
+  const [pessoas, eventos, lancamentos, tarefas] = await Promise.all([
+    listarPessoas(cliente),
+    cliente
+      .from('evento')
+      .select('id, acao, detalhe, criado_em, autor:autor_id (nome)')
+      .eq('negocio_id', id)
+      .order('criado_em', { ascending: false })
+      .then((r) => r.data ?? []),
+    cliente
+      .from('financeiro')
+      .select('id, tipo, rubrica, descricao, valor, vencimento, pago_em')
+      .eq('negocio_id', id)
+      .order('vencimento', { ascending: true })
+      .then((r) => r.data ?? []),
+    cliente
+      .from('tarefa')
+      .select('id, titulo, coluna, prazo, responsavel_id')
+      .eq('negocio_id', id)
+      .order('criado_em', { ascending: true })
+      .then((r) => r.data ?? []),
+  ]);
 
-  const { data: lancamentos } = await cliente
-    .from('financeiro')
-    .select('id, tipo, rubrica, descricao, valor, vencimento, pago_em')
-    .eq('negocio_id', id)
-    .order('vencimento', { ascending: true });
+  const lead = ehLead(negocio);
 
-  const ls = lancamentos ?? [];
-  const receita = somarPorTipo(ls, 'receita');
-  const custo = somarPorTipo(ls, 'custo');
-  const m = margem(ls);
-
-  const campos = ehLead(negocio)
-    ? [
-        ['Etapa', negocio.etapa],
-        ['Dono', negocio.dono?.nome || '—'],
-        ['Valor previsto', negocio.valor_previsto ? real(negocio.valor_previsto) : 'Não definido'],
-        ['Primeiro contato', dataBr(negocio.data_contato)],
-        ['Fechamento previsto', dataBr(negocio.fechamento_previsto)],
-      ]
-    : [
-        ['Etapa', negocio.etapa],
-        ['Dono', negocio.dono?.nome || '—'],
-        ['Valor contratado', negocio.valor_previsto ? real(negocio.valor_previsto) : 'Não definido'],
-        ['Início', dataBr(negocio.inicio)],
-        ['Prazo', dataBr(negocio.prazo)],
-      ];
+  const campos = [
+    { rotulo: 'Etapa', campo: 'etapa', tipo: 'lista', opcoes: [...ETAPAS_LEAD, ...ETAPAS_PROJETO], valor: negocio.etapa },
+    { rotulo: 'Dono', campo: 'dono_id', tipo: 'lista', opcoes: pessoas.map((p) => ({ valor: p.id, nome: p.nome })), valor: negocio.dono_id, vazio: 'Sem dono' },
+    { rotulo: lead ? 'Valor previsto' : 'Valor contratado', campo: 'valor_previsto', tipo: 'numero', formato: 'moeda', valor: negocio.valor_previsto },
+    lead
+      ? { rotulo: 'Primeiro contato', campo: 'data_contato', tipo: 'data', formato: 'data', valor: negocio.data_contato, vazio: '—' }
+      : { rotulo: 'Início', campo: 'inicio', tipo: 'data', formato: 'data', valor: negocio.inicio, vazio: '—' },
+    lead
+      ? { rotulo: 'Fechamento previsto', campo: 'fechamento_previsto', tipo: 'data', formato: 'data', valor: negocio.fechamento_previsto, vazio: '—' }
+      : { rotulo: 'Prazo', campo: 'prazo', tipo: 'data', formato: 'data', valor: negocio.prazo, vazio: '—' },
+  ];
 
   return (
     <main className="pn-tela">
       <div className="pn-barra">
         <div>
           <p className="pn-codigo">{negocio.codigo}</p>
-          <h1>{negocio.titulo}</h1>
+          <h1>
+            <CampoDoNegocio
+              negocioId={negocio.id}
+              campo="titulo"
+              valor={negocio.titulo}
+              rotulo="Título do negócio"
+            />
+          </h1>
           <p className="pn-sub">{negocio.cliente?.nome || 'Sem cliente'}</p>
         </div>
       </div>
 
       <dl className="pn-dados">
-        {campos.map(([rotulo, valor]) => (
-          <div key={rotulo}>
-            <dt>{rotulo}</dt>
-            <dd className="num">{valor}</dd>
+        {campos.map((c) => (
+          <div key={c.campo}>
+            <dt>{c.rotulo}</dt>
+            <dd className="num">
+              <CampoDoNegocio negocioId={negocio.id} {...c} />
+            </dd>
           </div>
         ))}
       </dl>
+      <p className="pn-dica">Clique em qualquer valor acima para alterar. Enter grava, Esc cancela.</p>
 
-      {negocio.motivo_perda && (
+      {negocio.etapa === 'Perdido' && (
         <>
           <p className="pn-sub">Motivo da perda</p>
-          <p className="pn-nota">{negocio.motivo_perda}</p>
+          <div className="pn-nota">
+            <CampoDoNegocio
+              negocioId={negocio.id} campo="motivo_perda" tipo="longo"
+              valor={negocio.motivo_perda} rotulo="Motivo da perda"
+              vazio="Por que este negócio não foi adiante? Clique para escrever."
+            />
+          </div>
         </>
       )}
+
+      <p className="pn-sub">Observações</p>
+      <div className="pn-nota">
+        <CampoDoNegocio
+          negocioId={negocio.id} campo="observacoes" tipo="longo"
+          valor={negocio.observacoes} rotulo="Observações"
+          vazio="Sem observações. Clique para escrever."
+        />
+      </div>
+
+      <p className="pn-sub">Tarefas</p>
+      <Tarefas negocioId={negocio.id} tarefas={tarefas} />
 
       <p className="pn-sub">Financeiro</p>
-      {ls.length === 0 ? (
-        <p className="pn-nota">Nenhum lançamento. Um lead sem valor fechado ainda não tem financeiro.</p>
-      ) : (
-        <>
-          <div className="pn-kpis">
-            <div className="pn-kpi"><span className="pn-kpi-n num">{real(receita)}</span><span className="pn-kpi-r">Receita</span></div>
-            <div className="pn-kpi"><span className="pn-kpi-n num neg">{real(custo)}</span><span className="pn-kpi-r">Custos</span></div>
-            <div className="pn-kpi"><span className="pn-kpi-n num pos">{m === null ? '—' : m + '%'}</span><span className="pn-kpi-r">Margem</span></div>
-            <div className="pn-kpi"><span className="pn-kpi-n num">{real(aReceber(ls))}</span><span className="pn-kpi-r">A receber</span></div>
-          </div>
-          <ul className="pn-lanc">
-            {ls.map((l) => (
-              <li key={l.id}>
-                <span className="pn-lanc-txt">
-                  <strong>{l.rubrica || l.descricao || (l.tipo === 'receita' ? 'Receita' : 'Custo')}</strong>
-                  {l.descricao && l.rubrica && <span className="pn-lanc-rub">{l.descricao}</span>}
-                </span>
-                <span className={'pn-lanc-val num' + (l.tipo === 'custo' ? ' saida' : '')}>
-                  {l.tipo === 'custo' ? '−' : ''}{real(l.valor)}
-                </span>
-                <span className="pn-lanc-sit num">
-                  {l.pago_em ? 'pago ' + dataBr(l.pago_em) : dataBr(l.vencimento)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      <Financeiro negocioId={negocio.id} lancamentos={lancamentos} />
 
       <p className="pn-sub">Linha do tempo</p>
-      {(eventos ?? []).length === 0 ? (
+      {eventos.length === 0 ? (
         <p className="pn-nota">Sem histórico ainda.</p>
       ) : (
         <ul className="pn-linha">

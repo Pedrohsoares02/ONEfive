@@ -329,3 +329,159 @@
 
 .pn-tit a { color: inherit; text-decoration: none; }
 .pn-tit a:hover { text-decoration: underline; text-decoration-color: var(--vivo); }
+
+/* ---------- botões ---------- */
+.pn-acao {
+    font: inherit; font-weight: 500; font-size: 14px;
+    border: 1px solid transparent; border-radius: 999px;
+    padding: 10px 20px; cursor: pointer;
+}
+.pn-acao--forte {
+    background: var(--vivo); color: #fff;
+    box-shadow: 0 10px 22px -12px rgba(230, 24, 111, .8);
+}
+.pn-acao--forte:hover { background: var(--risk); }
+.pn-acao--forte:disabled { opacity: .65; cursor: progress; }
+.pn-acao--leve { background: var(--card); color: var(--ink); border-color: var(--line); }
+.pn-acao--leve:hover { border-color: var(--border-hover, #CFC7DC); }
+
+/* ---------- campo que vira editável ao clicar ---------- */
+.pn-edit { position: relative; display: inline-block; max-width: 100%; }
+.pn-edit__ver {
+    font: inherit; color: inherit; background: none; border: 0;
+    padding: 2px 4px; margin: -2px -4px; border-radius: 5px;
+    text-align: left; cursor: text; max-width: 100%;
+    border-bottom: 1px dashed transparent;
+}
+.pn-edit__ver:hover { background: rgba(42, 21, 69, .045); border-bottom-color: #CFC7DC; }
+.pn-edit__ver.vazio { color: var(--muted); font-weight: 400; }
+.pn-edit__campo {
+    font: inherit; color: inherit; background: var(--card); width: 100%;
+    border: 1px solid var(--vivo); border-radius: 6px;
+    padding: 5px 8px; margin: -6px -9px;
+}
+.pn-edit__campo:focus { outline: none; box-shadow: 0 0 0 3px rgba(230, 24, 111, .14); }
+textarea.pn-edit__campo { min-height: 92px; resize: vertical; line-height: 1.55; }
+
+.pn-salvo {
+    margin-left: 8px; font-family: var(--mono); font-size: 10px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--cool);
+}
+.pn-recusa { display: block; color: var(--risk); font-size: 12.5px; margin-top: 4px; }
+.pn-recusa--bloco {
+    margin: 0 0 14px; padding: 11px 14px; font-size: 13.5px;
+    border: 1px solid rgba(201, 20, 94, .28); border-radius: 9px;
+    background: rgba(201, 20, 94, .06);
+}
+.pn-dica { color: var(--muted); font-size: 12.5px; margin: 12px 0 0; }
+
+/* ---------- tarefas ---------- */
+.pn-tarefas {
+    list-style: none; margin: 0; padding: 0; background: var(--card);
+    border: 1px solid var(--line); border-radius: 4px;
+}
+.pn-tarefa {
+    display: flex; align-items: center; gap: 14px;
+    padding: 11px 18px; border-bottom: 1px solid var(--line);
+}
+.pn-tarefa:last-child { border-bottom: 0; }
+.pn-tarefa.feita .pn-tarefa__tit { color: var(--muted); text-decoration: line-through; }
+.pn-tarefa__tit { flex: 1; min-width: 0; font-weight: 500; }
+
+.pn-situacao {
+    font: inherit; font-size: 12.5px; color: var(--ink); background: #F1EBF8;
+    border: 1px solid transparent; border-radius: 999px;
+    padding: 4px 10px; cursor: pointer;
+}
+.pn-situacao:hover { border-color: #CFC7DC; }
+.pn-situacao[data-col="Fazendo"] { background: rgba(31, 111, 178, .11); color: var(--processos); }
+.pn-situacao[data-col="Aguardando"] { background: rgba(240, 180, 41, .16); color: var(--warn); }
+.pn-situacao[data-col="Feito"] { background: rgba(42, 21, 69, .07); color: var(--muted); }
+
+.pn-prazo { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.pn-prazo.atrasado { color: var(--risk); font-weight: 500; }
+
+.pn-apagar {
+    background: none; border: 0; color: var(--muted); cursor: pointer;
+    font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 5px;
+}
+.pn-apagar:hover { color: var(--risk); background: rgba(201, 20, 94, .08); }
+
+/* linha de inclusão, no pé da lista */
+.pn-nova { padding: 11px 18px; border-top: 1px solid var(--line); }
+.pn-nova__forma { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pn-nova input, .pn-nova select {
+    font: inherit; font-size: 14px; color: inherit; background: var(--paper);
+    border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px;
+}
+.pn-nova input:focus, .pn-nova select:focus {
+    outline: none; border-color: var(--vivo); background: var(--card);
+    box-shadow: 0 0 0 3px rgba(230, 24, 111, .12);
+}
+.pn-nova__tit { flex: 1; min-width: 160px; }
+.pn-nova__dt { width: 148px; }
+.pn-nova__val { width: 128px; text-align: right; }
+
+/* ---------- janela de novo negócio ---------- */
+dialog.pn-janela {
+    border: 0; padding: 0; border-radius: 14px;
+    width: min(520px, calc(100vw - 32px));
+    background: var(--card); color: var(--ink); font-family: var(--corpo);
+    box-shadow: 0 30px 70px -24px rgba(42, 21, 69, .5);
+}
+dialog.pn-janela::backdrop { background: rgba(42, 21, 69, .42); backdrop-filter: blur(3px); }
+.pn-janela__cab { padding: 24px 28px 0; }
+.pn-janela h2 {
+    font-family: var(--display); font-size: 24px; font-weight: 600;
+    letter-spacing: -.035em; margin: 6px 0 0;
+}
+.pn-janela__corpo { padding: 22px 28px 0; display: grid; gap: 16px; }
+.pn-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pn-rotulo { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.pn-entrada {
+    width: 100%; font: inherit; color: inherit; background: var(--paper);
+    border: 1px solid var(--line); border-radius: 9px; padding: 11px 13px;
+}
+.pn-entrada:focus {
+    outline: none; border-color: var(--vivo); background: var(--card);
+    box-shadow: 0 0 0 3px rgba(230, 24, 111, .12);
+}
+.pn-ajuda { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
+.pn-janela__pe { display: flex; justify-content: flex-end; gap: 10px; padding: 24px 28px; }
+@media (max-width: 560px) { .pn-dupla { grid-template-columns: 1fr; } }
+
+/* o título da ficha é editável: o botão herda o tamanho do h1 */
+.pn-tela h1 .pn-edit { font: inherit; letter-spacing: inherit; }
+.pn-tela h1 .pn-edit__campo { font-size: inherit; font-family: inherit; }
+
+/* ---------- a lâmpada atrás do vidro ---------- */
+.pn-fundo {
+    position: fixed; inset: 0; z-index: 0;
+    overflow: hidden; pointer-events: none;
+}
+.pn-fundo img {
+    position: absolute; right: -10%; top: 50%; translate: 0 -50%;
+    height: 118%; width: auto; max-width: none;
+    /* o desfoque é o vidro; a saturação baixa tira o brilho de vitrine */
+    filter: blur(30px) saturate(.6);
+    opacity: .3;
+    /* some antes de encostar nas bordas, em vez de terminar num corte reto */
+    -webkit-mask-image: radial-gradient(60% 60% at 50% 50%, #000 30%, transparent 78%);
+    mask-image: radial-gradient(60% 60% at 50% 50%, #000 30%, transparent 78%);
+}
+/* o vidro em si: um véu claro por cima de tudo */
+.pn-fundo::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(100deg,
+        rgba(248, 247, 251, .95) 0%,
+        rgba(248, 247, 251, .88) 38%,
+        rgba(248, 247, 251, .74) 62%,
+        rgba(248, 247, 251, .66) 100%);
+}
+
+/* o conteúdo e a barra ficam acima do fundo */
+.pn-tela { position: relative; z-index: 1; }
+
+@media (max-width: 860px) {
+    .pn-fundo img { height: auto; width: 170%; right: -35%; opacity: .22; }
+}

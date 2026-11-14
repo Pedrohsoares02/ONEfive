@@ -1,6 +1,7 @@
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { exigirUsuario } from '@/lib/sessao.js';
 import NavPainel from '@/components/painel/NavPainel.js';
+import { HERO_IMAGEM } from '@/app/constants';
 
 // Página de usuário logado: lê cookie de sessão, nada aqui pode ser
 // pré-renderizado. Rota bloqueante é o comportamento correto.
@@ -17,6 +18,13 @@ export default async function LayoutInterno({ children }) {
 
   return (
     <>
+      {/* A mesma lâmpada da landing, atrás de um vidro: desfocada, apagada e
+          coberta por um véu claro. Fica fixa, então não acompanha a rolagem
+          e nunca disputa a leitura com o conteúdo. */}
+      <div className="pn-fundo" aria-hidden="true">
+        <img src={HERO_IMAGEM} alt="" decoding="async" />
+      </div>
+
       <header className="pn-topo">
         <div className="pn-topo-in">
           <p className="pn-marca">
