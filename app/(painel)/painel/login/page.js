@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+
+import MolduraEntrada from '@/components/painel/MolduraEntrada.js';
 import FormaLogin from '@/components/painel/FormaLogin.js';
 
 export const metadata = { title: 'Entrar — Painel ONEfive' };
@@ -14,7 +16,7 @@ async function AvisoMotivo({ searchParams }) {
   const texto = textos[motivo];
   if (!texto) return null;
   return (
-    <p className="pn-erro" role="alert">
+    <p className="of-entrada__aviso" role="alert">
       {texto}
     </p>
   );
@@ -22,22 +24,31 @@ async function AvisoMotivo({ searchParams }) {
 
 export default function PaginaLogin({ searchParams }) {
   return (
-    <main className="pn-entrada">
-      <div className="pn-cartao-entrada">
-        <p className="pn-marca">ONE<em>five</em></p>
-        <h1>Painel de gestão<span className="ponto">.</span></h1>
+    <MolduraEntrada>
+      <span className="of-entrada__regua" aria-hidden="true" />
 
-        <Suspense fallback={null}>
-          <AvisoMotivo searchParams={searchParams} />
-        </Suspense>
+      <p className="of-entrada__marca">
+        ONE<em>five</em>
+      </p>
 
-        <FormaLogin />
+      <h1 className="of-entrada__titulo">
+        Painel de gestão<span className="of-entrada__ponto">.</span>
+      </h1>
 
-        <p className="pn-rodape-entrada">
-          Acesso restrito à equipe da ONEfive. Se você entrou e mesmo assim não
-          vê nada, sua conta ainda não foi liberada.
-        </p>
-      </div>
-    </main>
+      <p className="of-entrada__linha">
+        Leads, projetos e financeiro da consultoria, num lugar só.
+      </p>
+
+      <Suspense fallback={null}>
+        <AvisoMotivo searchParams={searchParams} />
+      </Suspense>
+
+      <FormaLogin />
+
+      <p className="of-entrada__nota">
+        O acesso é liberado por pessoa. Se você entrar e o painel não abrir, é
+        porque sua conta ainda não foi incluída — fale com o Ricardo.
+      </p>
+    </MolduraEntrada>
   );
 }

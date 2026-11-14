@@ -28,13 +28,13 @@ export default function FormaLogin() {
   return (
     <>
       {erro && (
-        <p className="pn-erro" role="alert">
+        <p className="of-entrada__aviso" role="alert">
           {erro}
         </p>
       )}
 
       <button
-        className="pn-botao"
+        className="of-entrada__botao"
         type="button"
         onClick={entrarComGoogle}
         disabled={pendente}
