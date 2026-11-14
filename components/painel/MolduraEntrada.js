@@ -69,6 +69,9 @@ export default function MolduraEntrada({ children }) {
       <div className="of-hero__bridge" aria-hidden="true" />
       <div className="of-hero__veil" aria-hidden="true" />
       <div className="of-hero__grain" aria-hidden="true" />
+      {/* dissolve o bocal no rodapé: sem ela a base metálica encosta na
+          borda da janela e parece cortada */}
+      <div className="of-hero__fade" aria-hidden="true" />
 
       <div className="of-entrada__inner">
         <main className="of-entrada__cartao">{children}</main>
