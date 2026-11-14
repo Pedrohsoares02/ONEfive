@@ -7,10 +7,15 @@ export const metadata = { title: 'Entrar — Painel ONEfive' };
    inteira. O aviso fica num componente próprio, e a casca da página é estática. */
 async function AvisoMotivo({ searchParams }) {
   const { motivo } = await searchParams;
-  if (motivo !== 'sem-acesso') return null;
+  const textos = {
+    'sem-acesso': 'Sua conta entrou, mas ainda não tem acesso ao painel.',
+    falhou: 'O login com o Google não foi concluído. Tente de novo.',
+  };
+  const texto = textos[motivo];
+  if (!texto) return null;
   return (
     <p className="pn-erro" role="alert">
-      Sua conta entrou, mas ainda não tem acesso ao painel.
+      {texto}
     </p>
   );
 }

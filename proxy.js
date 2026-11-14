@@ -7,7 +7,9 @@ import { NextResponse } from 'next/server';
 export default function proxy(request) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/painel/login')) return NextResponse.next();
+  // O retorno do Google chega sem cookie ainda: é essa rota que cria a sessão.
+  if (pathname.startsWith('/painel/login') || pathname.startsWith('/painel/auth/'))
+    return NextResponse.next();
 
   const temSessao = request.cookies
     .getAll()

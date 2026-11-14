@@ -1,28 +1,46 @@
 'use client';
 
-import { useActionState } from 'react';
-import { entrar } from '@/app/(painel)/painel/login/acoes.js';
+import { useState } from 'react';
+
+import { criarClienteNavegador } from '@/lib/supabase/navegador.js';
 
 export default function FormaLogin() {
-  const [estado, acao, pendente] = useActionState(entrar, { erro: null });
+  const [erro, definirErro] = useState(null);
+  const [pendente, definirPendente] = useState(false);
+
+  async function entrarComGoogle() {
+    definirPendente(true);
+    definirErro(null);
+
+    const supabase = criarClienteNavegador();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/painel/auth/retorno` },
+    });
+
+    // Se deu certo, o navegador já saiu daqui para o Google.
+    if (error) {
+      definirErro('Não deu para abrir o login do Google. Tente de novo.');
+      definirPendente(false);
+    }
+  }
 
   return (
-    <form action={acao} noValidate>
-      {estado?.erro && <p className="pn-erro" role="alert">{estado.erro}</p>}
+    <>
+      {erro && (
+        <p className="pn-erro" role="alert">
+          {erro}
+        </p>
+      )}
 
-      <label className="pn-campo">
-        <span>E-mail</span>
-        <input type="email" name="email" autoComplete="username" required autoFocus />
-      </label>
-
-      <label className="pn-campo">
-        <span>Senha</span>
-        <input type="password" name="senha" autoComplete="current-password" required />
-      </label>
-
-      <button className="pn-botao" type="submit" disabled={pendente}>
-        {pendente ? 'Entrando…' : 'Entrar'}
+      <button
+        className="pn-botao"
+        type="button"
+        onClick={entrarComGoogle}
+        disabled={pendente}
+      >
+        {pendente ? 'Abrindo o Google…' : 'Entrar com Google'}
       </button>
-    </form>
+    </>
   );
 }
