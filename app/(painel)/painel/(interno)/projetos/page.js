@@ -12,7 +12,10 @@ export const instant = false;
 
 export const metadata = { title: 'Projetos — Painel ONEfive' };
 
-export default async function PaginaProjetos() {
+export default async function PaginaProjetos({ searchParams }) {
+  // No Next 16 searchParams é assíncrono.
+  const { novo } = await searchParams;
+
   const cliente = await criarClienteServidor();
   await exigirUsuario(cliente);
 
@@ -37,6 +40,7 @@ export default async function PaginaProjetos() {
           etapas={ETAPAS_PROJETO}
           pessoas={pessoas}
           clientes={clientes}
+          abrirAoCarregar={novo === '1'}
           rotulo="Novo projeto"
         />
       </div>

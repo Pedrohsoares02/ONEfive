@@ -8,6 +8,7 @@ import CampoDoNegocio from '@/components/painel/CampoDoNegocio.js';
 import Tarefas from '@/components/painel/Tarefas.js';
 import Financeiro from '@/components/painel/Financeiro.js';
 import ApagarNegocio from '@/components/painel/ApagarNegocio.js';
+import Contatos from '@/components/painel/Contatos.js';
 
 // Página de usuário logado: lê cookie de sessão, nada aqui pode ser
 // pré-renderizado. Rota bloqueante é o comportamento correto.
@@ -23,14 +24,14 @@ export default async function PaginaNegocio({ params }) {
   const { data: negocio } = await cliente
     .from('negocio')
     .select(
-      'id, codigo, titulo, etapa, valor_previsto, dono_id, data_contato, fechamento_previsto, inicio, prazo, motivo_perda, observacoes, cliente:cliente_id (nome)'
+      'id, codigo, titulo, etapa, valor_previsto, dono_id, cliente_id, data_contato, fechamento_previsto, inicio, prazo, motivo_perda, observacoes, cliente:cliente_id (nome)'
     )
     .eq('id', id)
     .maybeSingle();
 
   if (!negocio) notFound();
 
-  const [pessoas, eventos, lancamentos, tarefas] = await Promise.all([
+  const [pessoas, eventos, lancamentos, tarefas, contatos] = await Promise.all([
     listarPessoas(cliente),
     cliente
       .from('evento')
@@ -50,6 +51,14 @@ export default async function PaginaNegocio({ params }) {
       .eq('negocio_id', id)
       .order('criado_em', { ascending: true })
       .then((r) => r.data ?? []),
+    negocio.cliente_id
+      ? cliente
+          .from('contato')
+          .select('id, nome, cargo, email, fone')
+          .eq('cliente_id', negocio.cliente_id)
+          .order('criado_em', { ascending: true })
+          .then((r) => r.data ?? [])
+      : Promise.resolve([]),
   ]);
 
   const lead = ehLead(negocio);
@@ -115,6 +124,13 @@ export default async function PaginaNegocio({ params }) {
           </div>
         </>
       )}
+
+      <p className="pn-sub">Quem decide lá dentro</p>
+      <Contatos
+        clienteId={negocio.cliente_id}
+        contatos={contatos}
+        organizacao={negocio.cliente?.nome}
+      />
 
       <p className="pn-sub">Observações</p>
       <div className="pn-nota">

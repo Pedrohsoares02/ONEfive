@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation.js';
 
 import { criarNegocioAcao } from '@/app/(painel)/painel/acoes.js';
@@ -9,7 +9,7 @@ const HOJE = () => new Date().toISOString().slice(0, 10);
 
 /* Janela de cadastro. O cliente é digitado aqui mesmo: se já existir com
    esse nome, o negócio entra nele; se não, o cliente é criado junto. */
-export default function NovoNegocio({ etapas, pessoas, clientes, rotulo = 'Novo lead' }) {
+export default function NovoNegocio({ etapas, pessoas, clientes, rotulo = 'Novo lead', abrirAoCarregar = false }) {
   const janelaRef = useRef(null);
   const formaRef = useRef(null);
   const [erro, definirErro] = useState(null);
@@ -20,6 +20,11 @@ export default function NovoNegocio({ etapas, pessoas, clientes, rotulo = 'Novo 
     definirErro(null);
     janelaRef.current?.showModal();
   }
+
+  // A paleta de comandos manda "?novo=1" em vez de simular um clique.
+  useEffect(() => {
+    if (abrirAoCarregar) abrir();
+  }, [abrirAoCarregar]);
 
   async function enviar(e) {
     e.preventDefault();

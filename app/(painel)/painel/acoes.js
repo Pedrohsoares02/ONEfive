@@ -6,6 +6,7 @@ import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { moverEtapa, criarNegocio, salvarCampo, apagarNegocio } from '@/lib/negocios.js';
 import { criarTarefa, moverTarefa, renomearTarefa, apagarTarefa } from '@/lib/tarefas.js';
 import { criarLancamento, apagarLancamento } from '@/lib/lancamentos.js';
+import { criarContato, salvarCampoContato, apagarContato } from '@/lib/contatos.js';
 import { ehRedirecionamento } from '@/lib/erros.js';
 
 /* Toda ação volta { ok } ou { erro: <frase> }: a tela mostra a frase e
@@ -55,6 +56,18 @@ export async function renomearTarefaAcao(tarefaId, titulo) {
 
 export async function apagarTarefaAcao(tarefaId) {
   return executar((c) => apagarTarefa(c, tarefaId));
+}
+
+export async function criarContatoAcao(clienteId, dados) {
+  return executar((c) => criarContato(c, clienteId, dados));
+}
+
+export async function salvarCampoContatoAcao(contatoId, campo, valor) {
+  return executar((c) => salvarCampoContato(c, contatoId, campo, valor));
+}
+
+export async function apagarContatoAcao(contatoId) {
+  return executar((c) => apagarContato(c, contatoId));
 }
 
 export async function criarLancamentoAcao(negocioId, dados) {
