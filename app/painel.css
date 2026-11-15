@@ -500,9 +500,9 @@ dialog.pn-janela::backdrop { background: rgba(42, 21, 69, .42); backdrop-filter:
 /* ---------- início: os cartões levam à ficha ---------- */
 .pn-lista-seca { list-style: none; margin: 0; padding: 0; }
 .pn-lista-seca .pn-cartao { text-decoration: none; }
+/* .pn-pe fica de fora: ele é flex, e display:block colava a etapa no valor */
 .pn-lista-seca .pn-cliente,
-.pn-lista-seca .pn-tit,
-.pn-lista-seca .pn-pe { display: block; }
+.pn-lista-seca .pn-tit { display: block; }
 
 /* links escritos no meio de uma frase precisam parecer links */
 .pn-vazio a, .pn-nota a {
@@ -622,6 +622,8 @@ dialog.pn-paleta::backdrop { background: rgba(42, 21, 69, .38); backdrop-filter:
     flex: 1; font: inherit; font-size: 16px; color: var(--ink);
     background: none; border: 0; outline: none;
 }
+/* sem contorno de foco: é o único campo da janela, e o anel rosa lia como erro */
+.pn-paleta__busca input:focus-visible { outline: none; }
 .pn-paleta__lista { list-style: none; margin: 0; padding: 7px; max-height: 48vh; overflow: auto; }
 .pn-paleta__grupo {
     font-family: var(--mono); font-size: 9.5px; text-transform: uppercase;
