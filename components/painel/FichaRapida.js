@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 
 import { resumoDoNegocio } from '@/lib/resumo.js';
@@ -18,6 +19,10 @@ function iniciais(nome) {
    clique, na ficha. */
 export default function FichaRapida({ negocio, campoData, aoFechar }) {
   const fecharRef = useRef(null);
+  // .pn-tela tem z-index próprio para ficar acima da lâmpada, e isso prendia
+  // o painel abaixo da barra de navegação. Ele mora no body.
+  const [montado, definirMontado] = useState(false);
+  useEffect(() => definirMontado(true), []);
 
   useEffect(() => {
     fecharRef.current?.focus();
@@ -29,7 +34,9 @@ export default function FichaRapida({ negocio, campoData, aoFechar }) {
   const linhas = resumoDoNegocio(negocio, HOJE(), campoData);
   const contatos = negocio.cliente?.contato ?? [];
 
-  return (
+  if (!montado) return null;
+
+  return createPortal(
     <>
       <div className="pl-veu" onClick={aoFechar} aria-hidden="true" />
 
@@ -85,6 +92,7 @@ export default function FichaRapida({ negocio, campoData, aoFechar }) {
         </Link>
         <p className="pl-pe">Tarefas, financeiro e linha do tempo estão lá dentro.</p>
       </aside>
-    </>
+    </>,
+    document.body
   );
 }

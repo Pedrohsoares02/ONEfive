@@ -1359,12 +1359,12 @@ dialog.ed-janela::backdrop { background: rgba(42, 21, 69, .4); backdrop-filter: 
    quadro. Só mostra o que o quadro já tinha em mãos — por isso é instantâneo.
    ========================================================================= */
 .pl-veu {
-    position: fixed; inset: 0; z-index: 40;
+    position: fixed; inset: 0; z-index: 60;
     background: rgba(42, 21, 69, .14); backdrop-filter: blur(1px);
     animation: pl-surge .14s ease-out;
 }
 .pl-painel {
-    position: fixed; top: 0; right: 0; bottom: 0; z-index: 41;
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 61;
     width: min(380px, 100vw); overflow-y: auto;
     background: var(--card); border-left: 1px solid var(--line);
     box-shadow: -24px 0 60px -30px rgba(42, 21, 69, .55);
