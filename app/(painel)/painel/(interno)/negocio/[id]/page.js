@@ -48,7 +48,7 @@ export default async function PaginaNegocio({ params }) {
       .then((r) => r.data ?? []),
     cliente
       .from('tarefa')
-      .select('id, titulo, coluna, prazo, responsavel_id, urgente, depende_de, posicao_x, posicao_y')
+      .select('id, titulo, coluna, prazo, responsavel_id, urgente, depende_de, posicao_x, posicao_y, espera_quem, espera_desde')
       .eq('negocio_id', id)
       .order('criado_em', { ascending: true })
       .then((r) => r.data ?? []),

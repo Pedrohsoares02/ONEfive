@@ -6,7 +6,7 @@ import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { moverEtapa, criarNegocio, salvarCampo, apagarNegocio, moverColina } from '@/lib/negocios.js';
 import {
   criarTarefa, moverTarefa, renomearTarefa, apagarTarefa,
-  ligarTarefa, moverBalao, arrumarFluxo,
+  ligarTarefa, moverBalao, arrumarFluxo, definirEspera,
 } from '@/lib/tarefas.js';
 import { criarLancamento, apagarLancamento } from '@/lib/lancamentos.js';
 import { criarContato, salvarCampoContato, apagarContato } from '@/lib/contatos.js';
@@ -75,6 +75,10 @@ export async function salvarCampoContatoAcao(contatoId, campo, valor) {
 
 export async function apagarContatoAcao(contatoId) {
   return executar((c) => apagarContato(c, contatoId));
+}
+
+export async function definirEsperaAcao(tarefaId, quem) {
+  return executar((c) => definirEspera(c, tarefaId, quem));
 }
 
 export async function ligarTarefaAcao(tarefaId, anteriorId) {

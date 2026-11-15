@@ -17,7 +17,7 @@ const HOJE = () => new Date().toISOString().slice(0, 10);
 export default function Tarefas({ negocioId, tarefas, pessoas = [] }) {
   const [lista, definirLista] = useState(tarefas);
   const [erro, definirErro] = useState(null);
-  const [visao, definirVisao] = useState('lista');
+  const [visao, definirVisao] = useState('quadro');
   const router = useRouter();
 
   /* A lista pintada na hora é local, para a tela responder sem esperar o
@@ -46,6 +46,17 @@ export default function Tarefas({ negocioId, tarefas, pessoas = [] }) {
     else router.refresh();
   }
 
+  /* O "+" do topo da coluna cria a tarefa já naquela coluna, em vez de
+     mandar a pessoa até a lista e depois mover. */
+  async function criarNaColuna(coluna) {
+    const titulo = window.prompt(`Nova tarefa em ${coluna}:`);
+    if (!titulo || !titulo.trim()) return;
+
+    const r = await criarTarefaAcao(negocioId, { titulo, coluna });
+    if (!avisar(r)) return;
+    router.refresh();
+  }
+
   async function criar(e) {
     e.preventDefault();
     const forma = e.currentTarget;
@@ -61,7 +72,7 @@ export default function Tarefas({ negocioId, tarefas, pessoas = [] }) {
   return (
     <>
       <div className="pn-visoes" role="group" aria-label="Como ver as tarefas">
-        {[['lista', 'Lista'], ['quadro', 'Quadro'], ['fluxo', 'Fluxo']].map(([chave, rotulo]) => (
+        {[['quadro', 'Quadro'], ['lista', 'Lista'], ['fluxo', 'Fluxo']].map(([chave, rotulo]) => (
           <button
             key={chave} type="button" className="pn-visao"
             aria-pressed={visao === chave}
@@ -74,7 +85,12 @@ export default function Tarefas({ negocioId, tarefas, pessoas = [] }) {
 
       {erro && <p className="pn-recusa pn-recusa--bloco" role="alert">{erro}</p>}
 
-      {visao === 'quadro' && <QuadroTarefas tarefas={lista} pessoas={pessoas} />}
+      {visao === 'quadro' && (
+        <QuadroTarefas
+          tarefas={lista} pessoas={pessoas}
+          aoCriar={(coluna) => criarNaColuna(coluna)}
+        />
+      )}
       {visao === 'fluxo' && <Fluxo tarefas={lista} pessoas={pessoas} />}
 
       <ul className="pn-tarefas" hidden={visao !== 'lista'}>
