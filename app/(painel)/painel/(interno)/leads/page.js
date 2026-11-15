@@ -1,14 +1,13 @@
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { exigirUsuario } from '@/lib/sessao.js';
 import { listarNegocios, listarPessoas, listarClientes, lerMovimento, comMovimento } from '@/lib/consultas.js';
-import { ETAPAS_LEAD, previsaoDoFunil } from '@/lib/funil.js';
-import Quadro from '@/components/painel/Quadro.js';
+import { ETAPAS_LEAD } from '@/lib/funil.js';
+import FunilLeads from '@/components/painel/FunilLeads.js';
 import NovoNegocio from '@/components/painel/NovoNegocio.js';
 
 // Página de usuário logado: lê cookie de sessão, nada aqui pode ser
 // pré-renderizado. Rota bloqueante é o comportamento correto.
 export const instant = false;
-
 
 export const metadata = { title: 'Leads — Painel ONEfive' };
 
@@ -23,31 +22,24 @@ export default async function PaginaLeads() {
     lerMovimento(cliente),
   ]);
   const negocios = comMovimento(achados, movimento);
-  const emJogo = previsaoDoFunil(negocios.filter((n) => n.etapa !== 'Perdido'));
+
+  if (negocios.length === 0) {
+    return (
+      <main className="pn-tela">
+        <div className="pn-barra">
+          <div><h1>Leads</h1></div>
+          <NovoNegocio etapas={ETAPAS_LEAD} pessoas={pessoas} clientes={clientes} rotulo="Novo lead" />
+        </div>
+        <p className="pn-vazio">Nenhum lead ainda. O primeiro cadastro cria o código NEG-001.</p>
+      </main>
+    );
+  }
 
   return (
     <main className="pn-tela">
-      <div className="pn-barra">
-        <div>
-          <h1>Leads</h1>
-          <p className="pn-sub">
-            {negocios.length} no funil, R$ {emJogo.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} em jogo
-          </p>
-        </div>
-
-        <NovoNegocio
-          etapas={ETAPAS_LEAD}
-          pessoas={pessoas}
-          clientes={clientes}
-          rotulo="Novo lead"
-        />
-      </div>
-
-      {negocios.length === 0 ? (
-        <p className="pn-vazio">Nenhum lead ainda. O primeiro cadastro cria o código NEG-001.</p>
-      ) : (
-        <Quadro etapas={ETAPAS_LEAD} negocios={negocios} tipo="leads" />
-      )}
+      <FunilLeads negocios={negocios} pessoas={pessoas} etapas={ETAPAS_LEAD}>
+        <NovoNegocio etapas={ETAPAS_LEAD} pessoas={pessoas} clientes={clientes} rotulo="Novo lead" />
+      </FunilLeads>
     </main>
   );
 }

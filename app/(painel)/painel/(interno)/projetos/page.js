@@ -46,7 +46,7 @@ export default async function PaginaProjetos() {
       {negocios.length === 0 ? (
         <p className="pn-vazio">Nenhum projeto ainda. Um lead vira projeto ao ir para “Em andamento”.</p>
       ) : (
-        <Quadro etapas={ETAPAS_PROJETO} negocios={negocios} tipo="projetos" />
+        <Quadro etapas={ETAPAS_PROJETO} negocios={negocios} tipo="projetos" campoData="prazo" />
       )}
     </main>
   );

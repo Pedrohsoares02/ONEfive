@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { ehRedirecionamento } from '@/lib/erros.js';
 import { diasParado, estaParado } from '@/lib/parado.js';
+import { fechaEm } from '@/lib/recortes.js';
+import { PESO_ETAPA } from '@/lib/funil.js';
 import { moverEtapaAcao } from '@/app/(painel)/painel/acoes.js';
 
 function iniciais(nome) {
@@ -12,23 +14,44 @@ function iniciais(nome) {
 }
 
 function dinheiro(valor) {
+  if (valor === null || valor === undefined || valor === '') return null;
   const v = Number(valor);
   if (!Number.isFinite(v)) return null;
   return 'R$ ' + v.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 }
 
-/* Há quanto tempo este negócio não se mexe. Fica no rodapé do cartão porque
-   é onde os três olham todo dia, sem precisar abrir nada. */
-function Silencio({ negocio }) {
-  const hoje = HOJE();
-  const dias = diasParado(negocio.ultimoEm, hoje);
-  if (dias === null || dias < 3) return null;
+const HOJE = () => new Date().toISOString().slice(0, 10);
 
+const DIA_MES = { day: '2-digit', month: 'short' };
+
+/* Os dois relógios do cartão: quando fecha e há quanto tempo não se mexe.
+   Ficam sempre à vista — é o que os três olham todo dia sem abrir nada. */
+function Relogios({ negocio, campoData }) {
+  const hoje = HOJE();
+  const data = negocio[campoData] ?? null;
+  const faltam = data ? fechaEm({ fechamento_previsto: data }, hoje) : null;
+  const dias = diasParado(negocio.ultimoEm, hoje);
   const demais = estaParado(negocio, hoje);
+
+  const quando = data
+    ? new Date(data + 'T00:00:00').toLocaleDateString('pt-BR', DIA_MES)
+    : null;
+
   return (
-    <span className={'pn-silencio num' + (demais ? ' demais' : '')}>
-      {demais ? `parado há ${dias} d` : `${dias} d`}
-    </span>
+    <div className="pn-relogios">
+      {data ? (
+        <span className={'pn-rel num' + (faltam < 0 ? ' vencido' : faltam <= 30 ? ' perto' : '')}>
+          {faltam < 0 ? 'venceu ' : 'fecha '}{quando}
+        </span>
+      ) : (
+        <span className="pn-rel fraco">sem data</span>
+      )}
+      {dias !== null && (
+        <span className={'pn-rel num' + (demais ? ' parado' : '')}>
+          {demais ? `parado há ${dias} d` : `${dias} d`}
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -39,17 +62,21 @@ function classeEtapa(etapa) {
   return '';
 }
 
-const HOJE = () => new Date().toISOString().slice(0, 10);
-
-export default function Quadro({ etapas, negocios, tipo }) {
+/* Quadro do funil. `gaveta` recolhe uma etapa numa aba vertical: Perdido
+   ocupava um quinto da largura para guardar o que já morreu. */
+export default function Quadro({ etapas, negocios, tipo, gaveta, campoData = 'fechamento_previsto' }) {
   const [lista, setLista] = useState(negocios);
   const [sobre, setSobre] = useState(null);
+  const [abertaGaveta, setAbertaGaveta] = useState(false);
   const [, transicao] = useTransition();
 
-  function soltar(etapa, evento) {
-    evento.preventDefault();
-    setSobre(null);
-    const id = evento.dataTransfer.getData('text/plain');
+  // a lista vem filtrada de fora: useState sozinho ignoraria a troca
+  useEffect(() => { setLista(negocios); }, [negocios]);
+
+  const noQuadro = etapas.filter((e) => e !== gaveta || abertaGaveta);
+  const naGaveta = gaveta && !abertaGaveta;
+
+  function mover(id, etapa) {
     const negocio = lista.find((n) => n.id === id);
     if (!negocio || negocio.etapa === etapa) return;
 
@@ -67,10 +94,56 @@ export default function Quadro({ etapas, negocios, tipo }) {
     });
   }
 
+  function soltar(etapa, evento) {
+    evento.preventDefault();
+    setSobre(null);
+    mover(evento.dataTransfer.getData('text/plain'), etapa);
+  }
+
+  function Cartao({ n }) {
+    const quem = n.cliente?.contato?.[0] ?? null;
+    return (
+      <article
+        className={'pn-cartao ' + classeEtapa(n.etapa)}
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.setData('text/plain', n.id);
+          e.currentTarget.classList.add('arrastando');
+        }}
+        onDragEnd={(e) => e.currentTarget.classList.remove('arrastando')}
+      >
+        <div className="pn-cliente">{n.cliente?.nome || 'Sem cliente'}</div>
+        <div className="pn-tit">
+          <Link href={'/painel/negocio/' + n.id} draggable={false}>{n.titulo}</Link>
+        </div>
+
+        <div className={'pn-quem' + (quem ? '' : ' sem')}>
+          <span className="pn-quem__ini">{quem ? iniciais(quem.nome) : '?'}</span>
+          {quem ? quem.nome + (quem.cargo ? ' · ' + quem.cargo : '') : 'sem contato lá dentro'}
+        </div>
+
+        <Relogios negocio={n} campoData={campoData} />
+
+        <div className="pn-pe">
+          <span className={'pn-valor num' + (dinheiro(n.valor_previsto) ? '' : ' pn-sem')}>
+            {dinheiro(n.valor_previsto) || 'Sem valor ainda'}
+          </span>
+          <span className="pn-dono" title={n.dono?.nome || 'Sem dono'}>
+            {iniciais(n.dono?.nome)}
+          </span>
+        </div>
+      </article>
+    );
+  }
+
   return (
-    <div className={'pn-quadro ' + tipo}>
-      {etapas.map((etapa) => {
+    <div className={'pn-quadro ' + tipo + (naGaveta ? ' com-gaveta' : '')}>
+      {noQuadro.map((etapa) => {
         const dela = lista.filter((n) => n.etapa === etapa);
+        const soma = dela.reduce(
+          (t, n) => (dinheiro(n.valor_previsto) ? t + Number(n.valor_previsto) : t), 0
+        );
+        const peso = PESO_ETAPA[etapa];
         return (
           <div
             key={etapa}
@@ -80,40 +153,39 @@ export default function Quadro({ etapas, negocios, tipo }) {
             onDrop={(e) => soltar(etapa, e)}
           >
             <div className="pn-col-cab">
-              <span className="pn-col-nome">{etapa}</span>
-              <span className="pn-col-n">{dela.length}</span>
+              <div className="pn-col-topo">
+                <span className="pn-col-nome">{etapa}</span>
+                <span className="pn-col-n">{dela.length}</span>
+                {peso && <span className="pn-col-peso">{Math.round(peso * 100)}%</span>}
+              </div>
+              <span className={'pn-col-soma num' + (soma ? '' : ' zero')}>
+                {soma ? dinheiro(soma) : '—'}
+              </span>
             </div>
 
-            {dela.map((n) => (
-              <article
-                key={n.id}
-                className={'pn-cartao ' + classeEtapa(n.etapa)}
-                draggable
-                onDragStart={(e) => {
-                  e.dataTransfer.setData('text/plain', n.id);
-                  e.currentTarget.classList.add('arrastando');
-                }}
-                onDragEnd={(e) => e.currentTarget.classList.remove('arrastando')}
-              >
-                <div className="pn-cliente">{n.cliente?.nome || 'Sem cliente'}</div>
-                <div className="pn-tit">
-                  <Link href={'/painel/negocio/' + n.id} draggable={false}>{n.titulo}</Link>
-                </div>
-                <div className="pn-pe">
-                  <span className={'pn-valor num' + (dinheiro(n.valor_previsto) ? '' : ' pn-sem')}>
-                    {dinheiro(n.valor_previsto) || 'Sem valor ainda'}
-                  </span>
-                  <span className="pn-dono" title={n.dono?.nome || 'Sem dono'}>
-                    {iniciais(n.dono?.nome)}
-                  </span>
-                </div>
-
-                <Silencio negocio={n} />
-              </article>
-            ))}
+            {dela.length === 0
+              ? <p className="pn-col-vazia">Arraste um negócio para cá</p>
+              : dela.map((n) => <Cartao key={n.id} n={n} />)}
           </div>
         );
       })}
+
+      {naGaveta && (
+        <button
+          type="button"
+          className={'pn-gaveta' + (sobre === gaveta ? ' sobre' : '')}
+          onClick={() => setAbertaGaveta(true)}
+          onDragOver={(e) => { e.preventDefault(); setSobre(gaveta); }}
+          onDragLeave={() => setSobre((s) => (s === gaveta ? null : s))}
+          onDrop={(e) => soltar(gaveta, e)}
+          title={'Abrir ' + gaveta}
+        >
+          <span className="pn-gaveta__vert">
+            <b>{gaveta}</b>
+            <i className="num">{lista.filter((n) => n.etapa === gaveta).length}</i>
+          </span>
+        </button>
+      )}
     </div>
   );
 }
