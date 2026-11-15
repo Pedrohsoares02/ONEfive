@@ -25,7 +25,7 @@ export default async function PaginaNegocio({ params }) {
   const { data: negocio } = await cliente
     .from('negocio')
     .select(
-      'id, codigo, titulo, etapa, valor_previsto, dono_id, cliente_id, data_contato, fechamento_previsto, inicio, prazo, motivo_perda, observacoes, cliente:cliente_id (nome, esfera, cidade)'
+      'id, codigo, titulo, etapa, valor_previsto, dono_id, cliente_id, data_contato, fechamento_previsto, inicio, prazo, motivo_perda, observacoes, cliente:cliente_id (nome)'
     )
     .eq('id', id)
     .maybeSingle();
@@ -88,9 +88,7 @@ export default async function PaginaNegocio({ params }) {
         { rotulo: 'Prazo', campo: 'prazo', tipo: 'data', formato: 'data', valor: negocio.prazo, vazio: '—' },
       ];
 
-  const organizacao = [negocio.cliente?.nome, negocio.cliente?.esfera, negocio.cliente?.cidade]
-    .filter(Boolean)
-    .join(' · ');
+  const organizacao = negocio.cliente?.nome ?? null;
 
   return (
     <main className="fc-tela">
