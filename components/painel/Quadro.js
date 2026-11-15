@@ -1,12 +1,12 @@
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';
-import Link from 'next/link';
 import { ehRedirecionamento } from '@/lib/erros.js';
 import { diasParado, estaParado } from '@/lib/parado.js';
 import { fechaEm } from '@/lib/recortes.js';
 import { PESO_ETAPA } from '@/lib/funil.js';
 import { moverEtapaAcao } from '@/app/(painel)/painel/acoes.js';
+import FichaRapida from '@/components/painel/FichaRapida.js';
 
 function iniciais(nome) {
   if (!nome) return '—';
@@ -68,6 +68,7 @@ export default function Quadro({ etapas, negocios, tipo, gaveta, campoData = 'fe
   const [lista, setLista] = useState(negocios);
   const [sobre, setSobre] = useState(null);
   const [abertaGaveta, setAbertaGaveta] = useState(false);
+  const [aberto, setAberto] = useState(null);
   const [, transicao] = useTransition();
 
   // a lista vem filtrada de fora: useState sozinho ignoraria a troca
@@ -104,7 +105,15 @@ export default function Quadro({ etapas, negocios, tipo, gaveta, campoData = 'fe
     const quem = n.cliente?.contato?.[0] ?? null;
     return (
       <article
-        className={'pn-cartao ' + classeEtapa(n.etapa)}
+        className={'pn-cartao ' + classeEtapa(n.etapa) + (aberto?.id === n.id ? ' aberto' : '')}
+        role="button"
+        tabIndex={0}
+        onClick={() => setAberto(n)}
+        onKeyDown={(e) => {
+          if (e.key !== 'Enter' && e.key !== ' ') return;
+          e.preventDefault();
+          setAberto(n);
+        }}
         draggable
         onDragStart={(e) => {
           e.dataTransfer.setData('text/plain', n.id);
@@ -113,9 +122,7 @@ export default function Quadro({ etapas, negocios, tipo, gaveta, campoData = 'fe
         onDragEnd={(e) => e.currentTarget.classList.remove('arrastando')}
       >
         <div className="pn-cliente">{n.cliente?.nome || 'Sem cliente'}</div>
-        <div className="pn-tit">
-          <Link href={'/painel/negocio/' + n.id} draggable={false}>{n.titulo}</Link>
-        </div>
+        <div className="pn-tit">{n.titulo}</div>
 
         <div className={'pn-quem' + (quem ? '' : ' sem')}>
           <span className="pn-quem__ini">{quem ? iniciais(quem.nome) : '?'}</span>
@@ -137,6 +144,14 @@ export default function Quadro({ etapas, negocios, tipo, gaveta, campoData = 'fe
   }
 
   return (
+    <>
+    {aberto && (
+      <FichaRapida
+        negocio={lista.find((n) => n.id === aberto.id) ?? aberto}
+        campoData={campoData}
+        aoFechar={() => setAberto(null)}
+      />
+    )}
     <div className={'pn-quadro ' + tipo + (naGaveta ? ' com-gaveta' : '')}>
       {noQuadro.map((etapa) => {
         const dela = lista.filter((n) => n.etapa === etapa);
@@ -187,5 +202,6 @@ export default function Quadro({ etapas, negocios, tipo, gaveta, campoData = 'fe
         </button>
       )}
     </div>
+    </>
   );
 }

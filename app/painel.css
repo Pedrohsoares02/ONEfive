@@ -1353,3 +1353,74 @@ dialog.ed-janela::backdrop { background: rgba(42, 21, 69, .4); backdrop-filter: 
     .pn-busca { margin-left: 0; width: 100%; }
     .pn-busca input { width: 100%; max-width: none; }
 }
+
+/* =========================================================================
+   Painel lateral: o cartão clicado se abre ao lado, sem tirar ninguém do
+   quadro. Só mostra o que o quadro já tinha em mãos — por isso é instantâneo.
+   ========================================================================= */
+.pl-veu {
+    position: fixed; inset: 0; z-index: 40;
+    background: rgba(42, 21, 69, .14); backdrop-filter: blur(1px);
+    animation: pl-surge .14s ease-out;
+}
+.pl-painel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 41;
+    width: min(380px, 100vw); overflow-y: auto;
+    background: var(--card); border-left: 1px solid var(--line);
+    box-shadow: -24px 0 60px -30px rgba(42, 21, 69, .55);
+    padding: 20px 24px 28px;
+    animation: pl-entra .18s cubic-bezier(.22, .61, .36, 1);
+}
+@keyframes pl-surge { from { opacity: 0 } }
+@keyframes pl-entra { from { transform: translateX(26px); opacity: .4 } }
+@media (prefers-reduced-motion: reduce) {
+    .pl-veu, .pl-painel { animation: none; }
+}
+
+.pl-cab { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pl-cod { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+.pl-x {
+    width: 30px; height: 30px; border-radius: 8px; border: 1px solid transparent;
+    background: none; color: var(--muted); font-size: 13px; cursor: pointer; line-height: 1;
+}
+.pl-x:hover { border-color: var(--line); background: var(--paper); color: var(--ink); }
+
+.pl-tit {
+    font-family: var(--display); font-size: 21px; font-weight: 600;
+    letter-spacing: -.035em; line-height: 1.15; margin: 10px 0 0;
+}
+.pl-org { margin: 5px 0 0; font-size: 13.5px; color: var(--muted); }
+
+.pl-linhas { margin: 20px 0 0; display: grid; gap: 1px; background: var(--line); border-radius: 10px; overflow: hidden; }
+.pl-linhas > div {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+    background: var(--paper); padding: 10px 13px;
+}
+.pl-linhas dt { font-size: 12.5px; color: var(--muted); }
+.pl-linhas dd { margin: 0; font-size: 13.5px; font-weight: 500; text-align: right; }
+.pl-linhas dd.tom-risco { color: var(--risk); }
+.pl-linhas dd.tom-alerta { color: var(--warn); }
+.pl-linhas dd.tom-fraco { color: #A79FB8; font-weight: 400; }
+
+.pl-rot {
+    margin: 22px 0 10px; font-family: var(--mono); font-size: 9.5px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .14em;
+}
+.pl-contatos { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; }
+.pl-contatos li { display: flex; align-items: center; gap: 10px; }
+.pl-ini {
+    width: 28px; height: 28px; border-radius: 50%; background: #F1EBF8; color: var(--ink);
+    display: grid; place-items: center; font-size: 10px; font-weight: 600; flex: none;
+}
+.pl-contatos b { display: block; font-weight: 500; font-size: 13.5px; }
+.pl-contatos small { display: block; font-size: 12.5px; color: var(--muted); }
+.pl-nada, .pl-nota { margin: 0; font-size: 13.5px; line-height: 1.55; }
+.pl-nada { color: #A79FB8; }
+
+.pl-ir { display: block; width: 100%; margin-top: 26px; text-align: center; text-decoration: none; }
+.pl-pe { margin: 9px 0 0; font-size: 12px; color: var(--muted); text-align: center; }
+
+/* o cartão clicado continua marcado enquanto o painel está aberto */
+.pn-cartao.aberto { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.pn-cartao[role="button"] { cursor: pointer; }
+.pn-cartao[role="button"]:active { cursor: grabbing; }
