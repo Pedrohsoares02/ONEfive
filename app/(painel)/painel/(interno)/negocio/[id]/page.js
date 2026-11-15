@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation.js';
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { exigirUsuario, ehAdmin } from '@/lib/sessao.js';
 import { listarPessoas } from '@/lib/consultas.js';
+import { diasParado, estaParado } from '@/lib/parado.js';
 import { ehLead, ETAPAS_LEAD, ETAPAS_PROJETO } from '@/lib/funil.js';
 import CampoDoNegocio from '@/components/painel/CampoDoNegocio.js';
 import Tarefas from '@/components/painel/Tarefas.js';
@@ -31,7 +32,7 @@ export default async function PaginaNegocio({ params }) {
 
   if (!negocio) notFound();
 
-  const [pessoas, eventos, lancamentos, tarefas, contatos] = await Promise.all([
+  const [pessoas, eventos, lancamentos, tarefas, ultimoEm, contatos] = await Promise.all([
     listarPessoas(cliente),
     cliente
       .from('evento')
@@ -51,6 +52,12 @@ export default async function PaginaNegocio({ params }) {
       .eq('negocio_id', id)
       .order('criado_em', { ascending: true })
       .then((r) => r.data ?? []),
+    cliente
+      .from('negocio_movimento')
+      .select('ultimo_em')
+      .eq('negocio_id', id)
+      .maybeSingle()
+      .then((r) => r.data?.ultimo_em ?? null),
     negocio.cliente_id
       ? cliente
           .from('contato')
@@ -62,6 +69,9 @@ export default async function PaginaNegocio({ params }) {
   ]);
 
   const lead = ehLead(negocio);
+  const hoje = new Date().toISOString().slice(0, 10);
+  const silencio = diasParado(ultimoEm, hoje);
+  const demais = estaParado({ etapa: negocio.etapa, ultimoEm }, hoje);
 
   const campos = [
     { rotulo: 'Etapa', campo: 'etapa', tipo: 'lista', opcoes: [...ETAPAS_LEAD, ...ETAPAS_PROJETO], valor: negocio.etapa },
@@ -79,7 +89,14 @@ export default async function PaginaNegocio({ params }) {
     <main className="pn-tela">
       <div className="pn-barra">
         <div>
-          <p className="pn-codigo">{negocio.codigo}</p>
+          <p className="pn-codigo">
+            {negocio.codigo}
+            {silencio !== null && silencio >= 3 && (
+              <span className={'pn-silencio num' + (demais ? ' demais' : '')}>
+                {demais ? `parado há ${silencio} dias` : `${silencio} dias sem movimento`}
+              </span>
+            )}
+          </p>
           <h1>
             <CampoDoNegocio
               negocioId={negocio.id}

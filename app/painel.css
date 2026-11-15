@@ -644,3 +644,19 @@ dialog.pn-paleta::backdrop { background: rgba(42, 21, 69, .38); backdrop-filter:
 .pn-paleta__nada { padding: 26px 20px; text-align: center; color: var(--muted); font-size: 14px; }
 
 @media (max-width: 860px) { .pn-buscar { min-width: 0; } .pn-buscar__texto { display: none; } }
+
+/* ---------- há quanto tempo isto não se mexe ---------- */
+.pn-silencio {
+    display: inline-block; margin-top: 8px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+}
+.pn-cartao .pn-silencio { margin-top: 7px; }
+.pn-silencio.demais { color: var(--risk); font-weight: 500; }
+.pn-codigo .pn-silencio { margin: 0 0 0 12px; }
+
+.pn-hoje__dono {
+    display: block; font-style: normal; margin-top: 2px;
+    font-family: var(--corpo); font-size: 12px; letter-spacing: 0;
+    text-transform: none; color: var(--muted);
+}

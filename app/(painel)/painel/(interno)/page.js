@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { exigirUsuario } from '@/lib/sessao.js';
-import { listarNegocios } from '@/lib/consultas.js';
+import { listarNegocios, lerMovimento, comMovimento } from '@/lib/consultas.js';
 import { ETAPAS, previsaoDoFunil, ehLead } from '@/lib/funil.js';
 import { pendencias } from '@/lib/pendencias.js';
 
@@ -18,7 +18,7 @@ export default async function PaginaInicio() {
   const cliente = await criarClienteServidor();
   const pessoa = await exigirUsuario(cliente);
 
-  const [negocios, tarefas, clientesComContato] = await Promise.all([
+  const [achados, tarefas, clientesComContato, movimento] = await Promise.all([
     listarNegocios(cliente, ETAPAS),
     cliente
       .from('tarefa')
@@ -29,7 +29,10 @@ export default async function PaginaInicio() {
       .from('contato')
       .select('cliente_id')
       .then((r) => new Set((r.data ?? []).map((c) => c.cliente_id))),
+    lerMovimento(cliente),
   ]);
+
+  const negocios = comMovimento(achados, movimento);
 
   // A regra "sem contato" precisa saber, por negócio, se a organização dele
   // já tem alguém cadastrado.
@@ -74,7 +77,11 @@ export default async function PaginaInicio() {
                 <span className="pn-hoje__o">{p.titulo}</span>
                 <span className="pn-hoje__pq">{p.motivo}</span>
               </Link>
-              <span className="pn-hoje__qdo">{p.quando}</span>
+              <span className="pn-hoje__qdo">
+                {p.quando}
+                {/* o dono aparece para os três: cobrança só de si mesmo não funciona */}
+                {p.dono && <em className="pn-hoje__dono">{p.dono}</em>}
+              </span>
             </li>
           ))}
         </ul>

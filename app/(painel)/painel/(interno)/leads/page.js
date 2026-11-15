@@ -1,6 +1,6 @@
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
 import { exigirUsuario } from '@/lib/sessao.js';
-import { listarNegocios, listarPessoas, listarClientes } from '@/lib/consultas.js';
+import { listarNegocios, listarPessoas, listarClientes, lerMovimento, comMovimento } from '@/lib/consultas.js';
 import { ETAPAS_LEAD, previsaoDoFunil } from '@/lib/funil.js';
 import Quadro from '@/components/painel/Quadro.js';
 import NovoNegocio from '@/components/painel/NovoNegocio.js';
@@ -19,11 +19,13 @@ export default async function PaginaLeads({ searchParams }) {
   const cliente = await criarClienteServidor();
   await exigirUsuario(cliente);
 
-  const [negocios, pessoas, clientes] = await Promise.all([
+  const [achados, pessoas, clientes, movimento] = await Promise.all([
     listarNegocios(cliente, ETAPAS_LEAD),
     listarPessoas(cliente),
     listarClientes(cliente),
+    lerMovimento(cliente),
   ]);
+  const negocios = comMovimento(achados, movimento);
   const emJogo = previsaoDoFunil(negocios.filter((n) => n.etapa !== 'Perdido'));
 
   return (

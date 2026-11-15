@@ -8,7 +8,8 @@ const HOJE = '2026-11-15';
 const negocio = (extra) => ({
   id: 'n1', codigo: 'NEG-001', titulo: 'Diagnóstico',
   etapa: 'Contato', valor_previsto: 1000,
-  atualizado_em: '2026-11-14T10:00:00Z',
+  ultimoEm: '2026-11-14T10:00:00Z',
+  dono: { nome: 'Ricardo' },
   fechamento_previsto: null,
   cliente: { nome: 'Prefeitura' },
   contatos: 1,
@@ -22,16 +23,33 @@ test('painel limpo não inventa pendência', () => {
   assert.deepEqual(r, []);
 });
 
-test('proposta enviada e parada há dez dias vira cobrança', () => {
-  const parada = negocio({ etapa: 'Proposta enviada', atualizado_em: '2026-11-05T10:00:00Z' });
-  const recente = negocio({ id: 'n2', etapa: 'Proposta enviada', atualizado_em: '2026-11-13T10:00:00Z' });
+test('lead sem movimento há duas semanas vira cobrança; o que se mexeu, não', () => {
+  const parado = negocio({ etapa: 'Proposta enviada', ultimoEm: '2026-11-01T10:00:00Z' });
+  const recente = negocio({ id: 'n2', etapa: 'Proposta enviada', ultimoEm: '2026-11-13T10:00:00Z' });
 
-  const r = pendencias({ negocios: [parada, recente], tarefas: [], hoje: HOJE });
-  const cobrancas = achar(r, 'proposta-parada');
+  const r = pendencias({ negocios: [parado, recente], tarefas: [], hoje: HOJE });
+  const p = achar(r, 'parado');
 
-  assert.equal(cobrancas.length, 1, 'cobrou proposta que teve movimento esta semana');
-  assert.equal(cobrancas[0].negocioId, 'n1');
-  assert.match(cobrancas[0].motivo, /10 dias/);
+  assert.equal(p.length, 1, 'cobrou negócio que teve movimento esta semana');
+  assert.equal(p[0].negocioId, 'n1');
+  assert.match(p[0].motivo, /14 dias/);
+});
+
+test('projeto aguenta três semanas antes de virar cobrança', () => {
+  const quinze = negocio({ etapa: 'Em andamento', ultimoEm: '2026-10-31T10:00:00Z' });
+  const vinteUm = negocio({ id: 'n2', etapa: 'Em andamento', ultimoEm: '2026-10-25T10:00:00Z' });
+
+  const r = pendencias({ negocios: [quinze, vinteUm], tarefas: [], hoje: HOJE });
+  const p = achar(r, 'parado');
+
+  assert.equal(p.length, 1, 'tratou projeto com o mesmo prazo de um lead');
+  assert.equal(p[0].negocioId, 'n2');
+});
+
+test('a cobrança diz de quem é o negócio, para os três enxergarem', () => {
+  const parado = negocio({ etapa: 'Negociação', ultimoEm: '2026-10-20T10:00:00Z', dono: { nome: 'Lucas' } });
+  const r = pendencias({ negocios: [parado], tarefas: [], hoje: HOJE });
+  assert.equal(achar(r, 'parado')[0].dono, 'Lucas');
 });
 
 test('projeto em risco aparece sempre', () => {

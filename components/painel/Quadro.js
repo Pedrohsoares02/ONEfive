@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { ehRedirecionamento } from '@/lib/erros.js';
+import { diasParado, estaParado } from '@/lib/parado.js';
 import { moverEtapaAcao } from '@/app/(painel)/painel/acoes.js';
 
 function iniciais(nome) {
@@ -16,12 +17,29 @@ function dinheiro(valor) {
   return 'R$ ' + v.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
 }
 
+/* Há quanto tempo este negócio não se mexe. Fica no rodapé do cartão porque
+   é onde os três olham todo dia, sem precisar abrir nada. */
+function Silencio({ negocio }) {
+  const hoje = HOJE();
+  const dias = diasParado(negocio.ultimoEm, hoje);
+  if (dias === null || dias < 3) return null;
+
+  const demais = estaParado(negocio, hoje);
+  return (
+    <span className={'pn-silencio num' + (demais ? ' demais' : '')}>
+      {demais ? `parado há ${dias} d` : `${dias} d`}
+    </span>
+  );
+}
+
 function classeEtapa(etapa) {
   if (etapa === 'Em risco' || etapa === 'Perdido') return 's-risk';
   if (etapa === 'Concluído' || etapa === 'Encerrado') return 's-ok';
   if (etapa === 'Em andamento') return 's-cool';
   return '';
 }
+
+const HOJE = () => new Date().toISOString().slice(0, 10);
 
 export default function Quadro({ etapas, negocios, tipo }) {
   const [lista, setLista] = useState(negocios);
@@ -89,6 +107,8 @@ export default function Quadro({ etapas, negocios, tipo }) {
                     {iniciais(n.dono?.nome)}
                   </span>
                 </div>
+
+                <Silencio negocio={n} />
               </article>
             ))}
           </div>
