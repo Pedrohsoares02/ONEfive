@@ -660,3 +660,164 @@ dialog.pn-paleta::backdrop { background: rgba(42, 21, 69, .38); backdrop-filter:
     font-family: var(--corpo); font-size: 12px; letter-spacing: 0;
     text-transform: none; color: var(--muted);
 }
+
+/* ---------- a colina ---------- */
+.cl-caixa {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 18px 10px 10px; margin-bottom: 24px;
+}
+.cl-cab {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 14px; flex-wrap: wrap; padding: 0 16px 8px;
+}
+.cl-cab h2 {
+    font-family: var(--display); font-size: 19px; font-weight: 600;
+    letter-spacing: -.03em; margin: 0;
+}
+.cl-cab p { margin: 2px 0 0; font-size: 13px; color: var(--muted); max-width: 62ch; }
+
+.cl-donos { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 16px 10px; }
+.cl-dono {
+    display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+    font: inherit; font-size: 12.5px; color: var(--muted);
+    background: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px;
+}
+.cl-dono i { width: 9px; height: 9px; border-radius: 50%; background: var(--pc); }
+.cl-dono small { font-family: var(--mono); font-size: 10.5px; }
+.cl-dono:hover { border-color: #CFC7DC; color: var(--ink); }
+.cl-dono[aria-pressed="true"] {
+    background: #F1EBF8; border-color: #CFC7DC; color: var(--ink); font-weight: 500;
+}
+
+.cl-svg { display: block; width: 100%; height: auto; touch-action: none; }
+.cl-linha { fill: none; stroke: #CFC7DC; stroke-width: 2; }
+.cl-chao { stroke: var(--line); stroke-width: 1; }
+.cl-meio { stroke: var(--line); stroke-width: 1; stroke-dasharray: 4 5; }
+.cl-rot {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase; fill: var(--muted);
+}
+.cl-rastro circle { fill: #CFC7DC; }
+
+.cl-no { cursor: grab; }
+.cl-no.arrastando { cursor: grabbing; }
+.cl-no circle.bola { fill: var(--pc); stroke: #fff; stroke-width: 2.5; }
+/* vazada = o sistema chutou pela etapa e ninguém confirmou */
+.cl-no.auto circle.bola { fill: #fff; stroke: var(--pc); stroke-width: 2.5; }
+.cl-no text {
+    font-family: var(--mono); font-size: 10px; font-weight: 500; fill: #fff;
+    text-anchor: middle; dominant-baseline: central; pointer-events: none;
+}
+.cl-no.auto text { fill: var(--pc); }
+.cl-no.apagado { opacity: .16; }
+.cl-no:hover circle.bola { stroke: var(--ink); }
+
+.cl-lista {
+    list-style: none; margin: 10px 0 0; padding: 0 16px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 2px 18px;
+}
+.cl-lista li { display: flex; align-items: center; gap: 9px; font-size: 13.5px; padding: 5px 0; }
+.cl-lista b {
+    font-family: var(--mono); font-size: 10.5px; color: #fff; background: var(--pc);
+    width: 19px; height: 19px; border-radius: 50%; display: grid; place-items: center;
+    flex: none; font-weight: 500;
+}
+.cl-lista li.auto b { background: #fff; color: var(--pc); box-shadow: inset 0 0 0 1.5px var(--pc); }
+.cl-lista button {
+    font: inherit; background: none; border: 0; padding: 0; cursor: pointer; color: inherit;
+    text-align: left; flex: 1; min-width: 0; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+}
+.cl-lista button:hover { text-decoration: underline; text-decoration-color: var(--vivo); }
+.cl-lista em {
+    font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--muted); flex: none;
+}
+.cl-vazio { padding: 28px 16px; text-align: center; color: var(--muted); font-size: 14px; }
+
+/* ---------- o fluxo das tarefas ---------- */
+.fl-caixa { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.fl-cab {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap; padding: 16px 20px 12px;
+}
+.fl-cab b {
+    display: block; font-family: var(--display); font-size: 28px;
+    line-height: 1; letter-spacing: -.03em;
+}
+.fl-cab p { margin: 4px 0 0; font-size: 13.5px; color: var(--muted); max-width: 54ch; }
+.fl-leg { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--muted); }
+.fl-leg span { display: inline-flex; align-items: center; gap: 6px; }
+.fl-leg i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.fl-leg i.l { width: 22px; height: 0; border-radius: 0; background: none; border-top: 2px solid #8E86A0; }
+.fl-leg i.l.t { border-top: 2px dashed #C3BCD2; }
+
+.fl-tela {
+    position: relative; height: 460px; overflow: auto; touch-action: none;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: radial-gradient(circle at 1px 1px, rgba(42, 21, 69, .09) 1px, transparent 0) 0 0/22px 22px;
+}
+.fl-mundo { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.fl-mundo svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.fl-mundo svg .fio { fill: none; stroke: #8E86A0; stroke-width: 2.2; stroke-linecap: round; }
+.fl-mundo svg .fio.falta { stroke: #C3BCD2; stroke-width: 2; stroke-dasharray: 6 6; }
+.fl-mundo svg .fio.puxando { stroke: var(--vivo); stroke-width: 2.2; stroke-dasharray: 4 5; }
+
+.fl-no {
+    position: absolute; width: 210px; background: var(--card);
+    border: 1px solid var(--line); border-left: 3px solid var(--c, var(--line));
+    border-radius: 10px; cursor: grab; box-shadow: 0 1px 3px rgba(42, 21, 69, .06);
+}
+.fl-no:active { cursor: grabbing; }
+.fl-no.feito { opacity: .72; }
+.fl-no.alvo { border-color: var(--vivo); box-shadow: 0 0 0 3px rgba(230, 24, 111, .16); }
+.fl-abrir { padding: 10px 12px; }
+.fl-col {
+    display: flex; align-items: center; gap: 6px; font-family: var(--mono);
+    font-size: 9.5px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted);
+}
+.fl-col i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+.fl-col em { font-style: normal; color: var(--risk); margin-left: auto; }
+.fl-titulo { display: block; font-weight: 500; font-size: 13.5px; line-height: 1.35; margin: 5px 0 7px; }
+.fl-no.feito .fl-titulo { text-decoration: line-through; color: var(--muted); }
+.fl-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.fl-av {
+    width: 20px; height: 20px; border-radius: 50%; background: #F1EBF8; color: var(--ink);
+    display: grid; place-items: center; font-size: 9.5px; font-weight: 600; flex: none;
+}
+.fl-av.vazio { background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); }
+
+.fl-porta {
+    position: absolute; top: 50%; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--card); border: 2px solid #C3BCD2; transform: translateY(-50%);
+}
+.fl-porta.sai { right: -7px; cursor: crosshair; }
+.fl-porta.sai:hover { border-color: var(--vivo); background: var(--vivo); }
+.fl-porta.ent { left: -7px; }
+
+.fl-marco {
+    position: absolute; display: flex; align-items: center; gap: 9px;
+    padding: 9px 15px; border-radius: 999px; background: var(--ink); color: #fff;
+    font-size: 13px; font-weight: 500; white-space: nowrap;
+}
+.fl-marco.fim { background: var(--card); color: var(--muted); border: 1px dashed #C3BCD2; }
+.fl-marco.fim.ok { background: var(--processos); color: #fff; border: 0; }
+
+.fl-bandeja {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    padding: 11px 20px; font-size: 12.5px; color: var(--muted);
+}
+.fl-bandeja button {
+    font: inherit; font-size: 12.5px; max-width: 250px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; padding: 5px 10px; border-radius: 9px;
+    background: var(--paper); border: 1px dashed #C3BCD2; color: var(--muted); cursor: pointer;
+}
+.fl-bandeja button:hover { border-style: solid; color: var(--ink); }
+
+.fl-zoom { position: absolute; right: 12px; bottom: 12px; display: flex; gap: 4px; z-index: 6; }
+.fl-zoom button {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); font-weight: 600; font-size: 15px; cursor: pointer;
+}
+.fl-zoom button.largo { width: auto; padding: 0 12px; font-size: 12.5px; font-weight: 500; }
+.fl-zoom button:hover { border-color: #CFC7DC; }
+.fl-rodape { margin: 0; padding: 10px 20px 14px; font-size: 12.5px; color: var(--muted); }

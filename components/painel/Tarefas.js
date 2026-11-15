@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation.js';
 
 import CampoEditavel from '@/components/painel/CampoEditavel.js';
+import Fluxo from '@/components/painel/Fluxo.js';
 import { COLUNAS_TAREFA } from '@/lib/funil.js';
 import {
   criarTarefaAcao, moverTarefaAcao, renomearTarefaAcao, apagarTarefaAcao,
@@ -12,9 +13,10 @@ import {
 const dataBr = (d) => (d ? d.split('-').reverse().join('/') : '—');
 const HOJE = () => new Date().toISOString().slice(0, 10);
 
-export default function Tarefas({ negocioId, tarefas }) {
+export default function Tarefas({ negocioId, tarefas, pessoas = [] }) {
   const [lista, definirLista] = useState(tarefas);
   const [erro, definirErro] = useState(null);
+  const [visao, definirVisao] = useState('lista');
   const router = useRouter();
 
   /* A lista pintada na hora é local, para a tela responder sem esperar o
@@ -57,9 +59,26 @@ export default function Tarefas({ negocioId, tarefas }) {
 
   return (
     <>
+      <div className="pn-visoes">
+        <button
+          type="button" className="pn-visao" aria-pressed={visao === 'lista'}
+          onClick={() => definirVisao('lista')}
+        >
+          Lista
+        </button>
+        <button
+          type="button" className="pn-visao" aria-pressed={visao === 'fluxo'}
+          onClick={() => definirVisao('fluxo')}
+        >
+          Fluxo
+        </button>
+      </div>
+
       {erro && <p className="pn-recusa pn-recusa--bloco" role="alert">{erro}</p>}
 
-      <ul className="pn-tarefas">
+      {visao === 'fluxo' && <Fluxo tarefas={lista} pessoas={pessoas} />}
+
+      <ul className="pn-tarefas" hidden={visao !== 'lista'}>
         {lista.map((t) => (
           <li className={'pn-tarefa' + (t.coluna === 'Feito' ? ' feita' : '')} key={t.id}>
             <select

@@ -48,7 +48,7 @@ export default async function PaginaNegocio({ params }) {
       .then((r) => r.data ?? []),
     cliente
       .from('tarefa')
-      .select('id, titulo, coluna, prazo, responsavel_id')
+      .select('id, titulo, coluna, prazo, responsavel_id, urgente, depende_de, posicao_x, posicao_y')
       .eq('negocio_id', id)
       .order('criado_em', { ascending: true })
       .then((r) => r.data ?? []),
@@ -159,7 +159,7 @@ export default async function PaginaNegocio({ params }) {
       </div>
 
       <p className="pn-sub">Tarefas</p>
-      <Tarefas negocioId={negocio.id} tarefas={tarefas} />
+      <Tarefas negocioId={negocio.id} tarefas={tarefas} pessoas={pessoas} />
 
       <p className="pn-sub">Financeiro</p>
       <Financeiro negocioId={negocio.id} lancamentos={lancamentos} />

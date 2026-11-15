@@ -7,6 +7,7 @@ const PAGINAS = [
   ['/painel', 'Início'],
   ['/painel/leads', 'Leads'],
   ['/painel/projetos', 'Projetos'],
+  ['/painel/colina', 'Colina'],
 ];
 
 export default function NavPainel() {

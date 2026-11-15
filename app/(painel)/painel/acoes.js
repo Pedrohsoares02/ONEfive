@@ -3,8 +3,11 @@
 import { revalidatePath } from 'next/cache';
 
 import { criarClienteServidor } from '@/lib/supabase/servidor.js';
-import { moverEtapa, criarNegocio, salvarCampo, apagarNegocio } from '@/lib/negocios.js';
-import { criarTarefa, moverTarefa, renomearTarefa, apagarTarefa } from '@/lib/tarefas.js';
+import { moverEtapa, criarNegocio, salvarCampo, apagarNegocio, moverColina } from '@/lib/negocios.js';
+import {
+  criarTarefa, moverTarefa, renomearTarefa, apagarTarefa,
+  ligarTarefa, moverBalao, arrumarFluxo,
+} from '@/lib/tarefas.js';
 import { criarLancamento, apagarLancamento } from '@/lib/lancamentos.js';
 import { criarContato, salvarCampoContato, apagarContato } from '@/lib/contatos.js';
 import { ehRedirecionamento } from '@/lib/erros.js';
@@ -58,6 +61,10 @@ export async function apagarTarefaAcao(tarefaId) {
   return executar((c) => apagarTarefa(c, tarefaId));
 }
 
+export async function moverColinaAcao(negocioId, posicao) {
+  return executar((c) => moverColina(c, negocioId, posicao));
+}
+
 export async function criarContatoAcao(clienteId, dados) {
   return executar((c) => criarContato(c, clienteId, dados));
 }
@@ -68,6 +75,18 @@ export async function salvarCampoContatoAcao(contatoId, campo, valor) {
 
 export async function apagarContatoAcao(contatoId) {
   return executar((c) => apagarContato(c, contatoId));
+}
+
+export async function ligarTarefaAcao(tarefaId, anteriorId) {
+  return executar((c) => ligarTarefa(c, tarefaId, anteriorId));
+}
+
+export async function moverBalaoAcao(tarefaId, x, y) {
+  return executar((c) => moverBalao(c, tarefaId, x, y));
+}
+
+export async function arrumarFluxoAcao(ids) {
+  return executar((c) => arrumarFluxo(c, ids));
 }
 
 export async function criarLancamentoAcao(negocioId, dados) {
