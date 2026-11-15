@@ -26,3 +26,42 @@ A divisão é por quem lê, não por assunto:
 
 Ao criar uma função nova, pergunte quem precisa dela. Se a tela precisa,
 ela vai no módulo puro — mesmo que o assunto seja o mesmo da gravação.
+
+## Como trabalhamos (acordado em 15/11/2026)
+
+### Sessão
+
+Uma sessão por frente de trabalho. A conversa inteira é reenviada a cada
+mensagem: sessão longa é o maior custo do projeto, e contexto menor também
+produz menos confusão entre coisas parecidas.
+
+O que for durável vem para este arquivo ou para `docs/`. O que não estiver
+escrito aqui não sobrevive ao fim da sessão.
+
+### Verificação
+
+Captura de tela só para julgar **aparência** — se ficou feio, se encostou, se
+sumiu. Para verificar **funcionamento**, consultar o DOM com JavaScript no
+navegador: largura computada, se o diálogo abriu, qual regra de CSS venceu.
+Responde melhor e custa uma fração.
+
+Depois de publicar, conferir no ar **uma vez**. Sem repetir o ciclo.
+
+### O que pode sair daqui para outro modelo
+
+Ricardo também usa o ChatGPT. Três testes, nessa ordem:
+
+1. Dá para fazer sem abrir este repositório?
+2. O resultado se julga com o olho, não com teste?
+3. Se vier errado, custa minutos — não vira bug?
+
+Os três sim, pode ir. Qualquer não, fica aqui. Protótipo de tela, direção
+visual, texto de página e crítica a uma decisão passam. Componente React,
+qualquer coisa que encoste em `app/painel.css`, e tudo que toque em RLS ou
+permissão, não passam.
+
+Antes de escrever algo caro que passe nos três testes — protótipo, acima de
+tudo — avisar que é candidato, e deixar ele decidir.
+
+A troca é por arquivo: o que vem do ChatGPT entra em `docs/do-chat/`, e o
+briefing que ele precisa anexar lá está em `docs/do-chat/briefing.md`.
