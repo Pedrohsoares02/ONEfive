@@ -821,3 +821,32 @@ dialog.pn-paleta::backdrop { background: rgba(42, 21, 69, .38); backdrop-filter:
 .fl-zoom button.largo { width: auto; padding: 0 12px; font-size: 12.5px; font-weight: 500; }
 .fl-zoom button:hover { border-color: #CFC7DC; }
 .fl-rodape { margin: 0; padding: 10px 20px 14px; font-size: 12.5px; color: var(--muted); }
+
+/* ---------- alternador de visão ---------- */
+.pn-visoes { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin: 0 0 14px; }
+.pn-visao {
+    font: inherit; font-size: 13.5px; color: var(--muted); cursor: pointer;
+    background: none; border: 1px solid transparent; border-radius: 8px; padding: 6px 13px;
+}
+.pn-visao:hover { background: rgba(42, 21, 69, .05); color: var(--ink); }
+.pn-visao[aria-pressed="true"] {
+    background: var(--card); border-color: var(--line); color: var(--ink);
+    font-weight: 500; box-shadow: 0 1px 2px rgba(42, 21, 69, .05);
+}
+
+/* ---------- quadro das tarefas ---------- */
+.pn-quadro--tarefas .pn-col:nth-child(1) { border-top-color: var(--line); }
+.pn-quadro--tarefas .pn-col:nth-child(2) { border-top-color: var(--dados); }
+.pn-quadro--tarefas .pn-col:nth-child(3) { border-top-color: var(--processos); }
+.pn-quadro--tarefas .pn-col:nth-child(4) { border-top-color: var(--metodo); }
+.pn-quadro--tarefas .pn-col:nth-child(5) { border-top-color: var(--ink); }
+
+.pn-cartao--tarefa { padding: 11px 13px; }
+.pn-cartao--tarefa .pn-tit { margin: 0 0 8px; font-size: 13.5px; }
+.pn-cartao--tarefa.feita { opacity: .7; }
+.pn-cartao--tarefa.feita .pn-tit { text-decoration: line-through; color: var(--muted); }
+.pn-cartao--tarefa::before { display: none; }
+.pn-urgente {
+    display: inline-block; margin-top: 8px; font-family: var(--mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: .12em; color: var(--risk);
+}

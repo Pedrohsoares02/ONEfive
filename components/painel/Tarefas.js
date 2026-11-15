@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation.js';
 
 import CampoEditavel from '@/components/painel/CampoEditavel.js';
 import Fluxo from '@/components/painel/Fluxo.js';
+import QuadroTarefas from '@/components/painel/QuadroTarefas.js';
 import { COLUNAS_TAREFA } from '@/lib/funil.js';
 import {
   criarTarefaAcao, moverTarefaAcao, renomearTarefaAcao, apagarTarefaAcao,
@@ -59,23 +60,21 @@ export default function Tarefas({ negocioId, tarefas, pessoas = [] }) {
 
   return (
     <>
-      <div className="pn-visoes">
-        <button
-          type="button" className="pn-visao" aria-pressed={visao === 'lista'}
-          onClick={() => definirVisao('lista')}
-        >
-          Lista
-        </button>
-        <button
-          type="button" className="pn-visao" aria-pressed={visao === 'fluxo'}
-          onClick={() => definirVisao('fluxo')}
-        >
-          Fluxo
-        </button>
+      <div className="pn-visoes" role="group" aria-label="Como ver as tarefas">
+        {[['lista', 'Lista'], ['quadro', 'Quadro'], ['fluxo', 'Fluxo']].map(([chave, rotulo]) => (
+          <button
+            key={chave} type="button" className="pn-visao"
+            aria-pressed={visao === chave}
+            onClick={() => definirVisao(chave)}
+          >
+            {rotulo}
+          </button>
+        ))}
       </div>
 
       {erro && <p className="pn-recusa pn-recusa--bloco" role="alert">{erro}</p>}
 
+      {visao === 'quadro' && <QuadroTarefas tarefas={lista} pessoas={pessoas} />}
       {visao === 'fluxo' && <Fluxo tarefas={lista} pessoas={pessoas} />}
 
       <ul className="pn-tarefas" hidden={visao !== 'lista'}>
