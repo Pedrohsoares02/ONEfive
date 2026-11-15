@@ -19,10 +19,12 @@ function iniciais(nome) {
    clique, na ficha. */
 export default function FichaRapida({ negocio, campoData, aoFechar }) {
   const fecharRef = useRef(null);
-  // .pn-tela tem z-index próprio para ficar acima da lâmpada, e isso prendia
-  // o painel abaixo da barra de navegação. Ele mora no body.
-  const [montado, definirMontado] = useState(false);
-  useEffect(() => definirMontado(true), []);
+  /* .pn-tela tem z-index próprio para ficar acima da lâmpada, e isso prendia
+     o painel abaixo da barra de navegação. Ele sai dali por portal — mas vai
+     para .painel, e não para o body: as cores e as fontes da marca são
+     declaradas em .painel, e fora dela o painel ficava sem fundo. */
+  const [casa, definirCasa] = useState(null);
+  useEffect(() => { definirCasa(document.querySelector('.painel') ?? document.body); }, []);
 
   useEffect(() => {
     fecharRef.current?.focus();
@@ -34,7 +36,7 @@ export default function FichaRapida({ negocio, campoData, aoFechar }) {
   const linhas = resumoDoNegocio(negocio, HOJE(), campoData);
   const contatos = negocio.cliente?.contato ?? [];
 
-  if (!montado) return null;
+  if (!casa) return null;
 
   return createPortal(
     <>
@@ -93,6 +95,6 @@ export default function FichaRapida({ negocio, campoData, aoFechar }) {
         <p className="pl-pe">Tarefas, financeiro e linha do tempo estão lá dentro.</p>
       </aside>
     </>,
-    document.body
+    casa
   );
 }
