@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projetos · Fila de ação · ONEfive</title>
+<style>
+:root{
+  color-scheme:light; --ink:#201633; --muted:#635b70; --line:#e5dfeb;
+  --paper:#fff; --bg:#f6f4f8; --purple:#663c96; --light:#f1e9fa;
+  --red:#a22b45; --red-bg:#fbeaf0; --amber:#854d10; --amber-bg:#fbefd9;
+  --green:#346854; --green-bg:#e9f5ee; --radius:16px;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px;color:var(--ink);background:var(--bg)
+}
+*{box-sizing:border-box}body{margin:0}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible{outline:3px solid #9264c0;outline-offset:3px}button:disabled{cursor:default}h1,h2,h3,p{margin:0}button{color:inherit}button,[type=button]{touch-action:manipulation}
+.top{height:66px;background:#201531;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(5vw,24px);gap:16px}
+.brand{display:flex;align-items:center;gap:11px;font-size:21px;letter-spacing:-1.1px;font-weight:850;white-space:nowrap}.brand i{font-style:normal;color:#debeff}.brand small{border-left:1px solid #574566;margin-left:8px;padding-left:17px;color:#e8dbf2;font-size:12px;font-weight:550;letter-spacing:0}
+.mark{width:18px;height:18px;border-radius:5px;background:#b685d8;transform:rotate(-12deg);box-shadow:inset 0 0 0 4px #d9b2f1}
+.sample{color:#e4d2f0;border:1px solid #654f76;border-radius:100px;padding:5px 10px;font-size:11px;white-space:nowrap}
+main{max-width:1440px;padding:39px max(5vw,24px) 40px;margin:auto}.intro{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:25px}
+h1{font-size:clamp(32px,5vw,49px);line-height:1;letter-spacing:-.064em;font-weight:790}.sub{margin-top:10px;color:var(--muted);font-size:15px;line-height:1.5}.date{white-space:nowrap;font-size:12px;color:var(--muted);padding-bottom:4px}
+.controls{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:23px;flex-wrap:wrap}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter,.plain,.select{border:1px solid var(--line);background:white;padding:8px 12px;border-radius:9px;font-weight:650;font-size:12px;white-space:nowrap}.filter span{margin-left:5px;color:var(--muted);font-variant-numeric:tabular-nums}.filter[aria-pressed=true]{color:#fff;background:var(--ink);border-color:var(--ink)}.filter[aria-pressed=true] span{color:#e6d6f1}.filter:hover,.plain:hover{border-color:#a58bb9}.owner-select{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted)}.select{color:var(--ink)}
+.surface{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius)}.chip{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:11px;padding:5px 8px;border-radius:6px;line-height:1.15;background:var(--light);color:#613a80}.chip:before{content:"";width:6px;height:6px;background:currentColor;border-radius:50%;flex:none}.chip.risk{color:var(--red);background:var(--red-bg)}.chip.wait{color:var(--amber);background:var(--amber-bg)}.chip.ok{color:var(--green);background:var(--green-bg)}
+.avatar{display:inline-grid;place-items:center;width:30px;height:30px;background:#f1e8fa;color:#633783;border-radius:50%;font-size:11px;font-weight:800;flex:none}.avatar.leo{background:#e3f0fa;color:#29577b}.avatar.lucas{background:#eee7fb;color:#5b4185}.person{display:flex;gap:8px;align-items:center;font-weight:700}.muted{color:var(--muted);font-size:12px;line-height:1.4}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.075em;text-transform:uppercase}.empty{padding:28px;color:var(--muted);text-align:center}.section-title{font-size:20px;letter-spacing:-.035em;line-height:1.2}.footnote{margin-top:18px;font-size:12px;color:var(--muted);line-height:1.5}
+.action-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}.queue{overflow:hidden}.queue-head{padding:17px 19px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line)}.queue-row{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) 16px;gap:12px;align-items:center;padding:16px 18px;width:100%;background:white;text-align:left;border:0;border-bottom:1px solid var(--line);position:relative}.queue-row:last-child{border-bottom:0}.queue-row:hover,.queue-row[aria-pressed=true]{background:#f7f1fc}.queue-row[aria-pressed=true]:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#8654ae}.queue-row strong{display:block;margin:6px 0 3px;line-height:1.3}.queue-row .person{font-size:12px}.queue-row .arrow{font-size:17px;color:var(--purple)}.queue-row:focus-visible,.lane-card:focus-visible,.date-note:focus-visible,.timeline-project:focus-visible{outline-offset:-3px}
+.spotlight{background:#291a3c;color:white;border-radius:var(--radius);overflow:hidden;box-shadow:0 13px 28px #291a3c16}.spot-top{padding:22px;background:radial-gradient(ellipse at top right,#593876 0%,transparent 65%)}.spot-top .eyebrow{color:#e8c8ff}.spot-top h2{font-size:27px;letter-spacing:-.048em;margin:11px 0 3px}.spot-top p{color:#eadcf2;font-size:12px}.spot-body{background:#342347;border-top:1px solid #554064;padding:17px 22px 21px}.spot-body .chip{margin:0 0 10px}.spot-body h3{font-size:17px;margin-bottom:14px}.spot-meta{display:grid;grid-template-columns:1fr 1fr;gap:13px;border-bottom:1px solid #5e4a6e;padding-bottom:14px;margin-bottom:13px}.spot-meta span{display:block;font-size:11px;color:#e5d1f1;margin-bottom:3px}.spot-meta strong{font-size:13px;line-height:1.35}.spot-body .plain{margin-top:14px;border-color:#fff}.other-list{margin-top:18px}.other-list summary{cursor:pointer;font-weight:700;padding:13px 16px}.other-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 16px;border-top:1px solid var(--line)}.other-row .plain{text-align:left;white-space:normal}
+.timeline{overflow:hidden}.timeline-head{padding:16px 19px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.legend{display:flex;gap:13px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:11px}.legend i{display:inline-block;vertical-align:middle;width:9px;height:9px;margin-right:4px}.legend .task{background:#864da9;transform:rotate(45deg)}.legend .project{background:#2c183f;border-radius:50%}.legend .today{background:#e2c8f0}.timeline-scroll{overflow-x:auto}.timeline-grid{min-width:845px}.time-header,.time-row{display:grid;grid-template-columns:245px minmax(0,1fr)}.time-header{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#faf8fc;color:var(--muted);font-size:11px}.time-header>div:first-child{padding:10px 17px;font-weight:700}.days,.track{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));position:relative}.day{display:grid;place-items:center;min-height:37px;border-left:1px solid var(--line)}.day.now,.track .now{background:#eee2f8}.day.weekend,.track .weekend{background:#f8f6fa}.time-row{border-bottom:1px solid var(--line);min-height:88px}.time-row:last-child{border-bottom:0}.timeline-project{border:0;background:white;text-align:left;padding:13px 17px;width:100%;display:grid;gap:4px}.timeline-project:hover,.date-note:hover{background:#f7f0fb}.timeline-project strong{font-size:14px;line-height:1.25}.track .cell{border-left:1px solid var(--line);height:100%}.bar{position:absolute;top:23px;height:5px;background:#c8addb;border-radius:20px;pointer-events:none}.bar.risk{background:#b96a83}.dot{position:absolute;top:25px;transform:translate(-50%,-50%);width:17px;height:17px;display:grid;place-items:center;border:0;background:transparent;padding:0;z-index:1}.dot::before{content:"";width:10px;height:10px;background:#864da9;transform:rotate(45deg)}.dot.project::before{background:#2c183f;border-radius:50%;transform:none}.dot.risk::before{background:var(--red)}.date-note{position:absolute;top:44px;left:9px;max-width:calc(100% - 18px);padding:4px 7px;text-align:left;border:1px solid var(--line);border-radius:6px;background:white;font-size:11px;font-weight:700;color:#513465;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.date-note.risk{color:var(--red)}.below-timeline{margin-top:13px}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;align-items:start}.lane{background:#eeebf2;border:1px solid #e5dfeb;border-radius:var(--radius);padding:11px}.lane-head{display:flex;gap:9px;align-items:center;padding:5px 3px 12px}.lane-head h2{font-size:16px}.lane-head .muted{font-size:11px}.lane-head .avatar{width:35px;height:35px;background:white}.lane-card{display:block;width:100%;background:white;border:1px solid #e3dbe9;border-radius:12px;text-align:left;padding:13px;margin-bottom:8px}.lane-card:last-child{margin-bottom:0}.lane-card:hover{border-color:#975fbd}.lane-card h3{font-size:15px;letter-spacing:-.02em;margin-top:8px;margin-bottom:3px;line-height:1.2}.lane-task{background:#f8f5fa;border-radius:8px;margin-top:10px;padding:9px;line-height:1.36;font-size:12px}.lane-task strong{display:block;margin-bottom:3px}.lane-stats{display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:8px;margin-top:9px;color:var(--muted);font-size:11px}
+dialog{padding:0;border:0;margin:0 0 0 auto;width:min(100%,570px);max-width:none;height:100dvh;max-height:none;background:white;color:var(--ink);box-shadow:-10px 0 45px #170e292e}dialog::backdrop{background:#1c122c75}.detail-top{position:sticky;top:0;background:#291a3c;color:white;padding:22px;z-index:2}.detail-top h2{font-size:25px;letter-spacing:-.035em;margin:7px 70px 3px 0}.detail-top p{color:#e5d5ef;font-size:12px}.detail-top form{position:absolute;right:18px;top:18px}.detail-content{padding:18px 22px 30px}.detail-section{border-bottom:1px solid var(--line);padding:0 0 15px;margin-bottom:16px}.detail-section h3{font-size:15px;margin-bottom:10px}.detail-section:last-child{border:0;margin:0}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{background:#f6f2f8;padding:9px 10px;border-radius:8px;line-height:1.25}.stat span{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}.stat b{font-size:14px}.stat.risk b{color:var(--red)}.columns{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-bottom:10px}.columns div{padding:6px 3px;background:#f6f2f8;border-radius:5px;text-align:center;font-size:10px;overflow-wrap:anywhere}.columns b{display:block;font-size:16px;margin:2px 0}.task-row{border-top:1px solid var(--line);padding:10px 3px;font-size:13px;line-height:1.45}.task-row:first-of-type{border-top:0}.task-row small{font-size:12px;color:var(--muted);display:block}.task-tags{display:flex;gap:4px;flex-wrap:wrap;margin:4px 0}.contact{line-height:1.45;margin-top:5px}.contact span{display:block;color:var(--muted);font-size:12px}.detail-info{margin-top:8px;color:var(--muted);font-size:11px;line-height:1.4}
+@media(max-width:1000px){.action-layout{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}.queue-row{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) 12px;gap:6px;padding:14px}.board{gap:8px}}
+@media(max-width:760px){.action-layout,.board{grid-template-columns:1fr}.intro{align-items:start}.date{white-space:normal;text-align:right;max-width:100px}.controls{margin-bottom:15px}.queue-row{grid-template-columns:1.1fr 1fr 12px}.timeline-head{padding:13px}.time-header,.time-row{grid-template-columns:182px minmax(0,1fr)}main{padding-top:26px}.lane{padding:10px}}
+@media(max-width:370px){main{padding-inline:14px}.top{padding-inline:14px}.brand small{display:none}.date{font-size:11px}.queue-row .person .avatar{display:none}}
+
+</style>
+</head>
+<body data-direction="action">
+<header class="top">
+  <div class="brand"><span class="mark" aria-hidden="true"></span><span>ONE<i>five</i></span><small>Projetos</small></div>
+  <span class="sample">Dados fictícios</span>
+</header>
+<main>
+  <div class="intro">
+    <div><h1>Fila de ação</h1><p class="sub">As pendências da carteira, na ordem de atenção.</p></div>
+    <p class="date">Cenário de 16 nov. 2026</p>
+  </div>
+  <div class="controls" id="controls"></div>
+  <div id="canvas"></div>
+</main>
+<dialog aria-labelledby="detail-title"></dialog>
+<script>
+const asOf = '2026-11-16';
+const people = ['Ricardo', 'Leo', 'Lucas'];
+const columns = ['Para depois', 'A fazer', 'Fazendo', 'Aguardando', 'Feito'];
+const projects = [
+  {id:'jornada', name:'Jornada de intraempreendedorismo', org:'Prefeitura de Vila das Araucárias', owner:'Ricardo', stage:'Validação', start:'2026-10-15', end:'2026-11-20', idle:6, value:120000,
+   contact:'Marina Costa', role:'Diretora de Gestão', entries:[
+    ['receita',48000,'2026-10-18','2026-10-18'],['receita',36000,'2026-11-25',null],['receita',36000,'2026-12-10',null],['custo',48000,'2026-11-10','2026-11-10'],['custo',14400,'2026-11-23',null]],
+   tasks:[
+    {name:'Validar mapa de desafios', person:'Leo', column:'Aguardando', due:'2026-11-17', ball:'Marina Costa · cliente', since:'2026-11-10', urgent:true},
+    {name:'Fechar roteiro da oficina', person:'Ricardo', column:'A fazer', due:'2026-11-19', blocked:'Validar mapa de desafios'},
+    {name:'Consolidar entrevistas', person:'Leo', column:'Feito'}]},
+  {id:'atendimento', name:'Redesenho do atendimento', org:'Prefeitura de Porto das Pedras', owner:'Lucas', stage:'Desenho', start:'2026-10-26', end:'2026-11-24', idle:2, value:150000,
+   contact:'Beatriz Ramos', role:'Gestora do contrato', entries:[
+    ['receita',60000,'2026-10-29','2026-10-29'],['receita',30000,'2026-11-11',null],['receita',60000,'2026-12-15',null],['custo',67000,'2026-11-13','2026-11-13'],['custo',45500,'2026-11-19',null]],
+   tasks:[
+    {name:'Fechar mapa do atendimento', person:'Lucas', column:'Fazendo', due:'2026-11-13', ball:'Lucas', since:'2026-11-12'},
+    {name:'Conferir escopo do piloto', person:'Ricardo', column:'A fazer', due:'2026-11-20'},
+    {name:'Organizar material de campo', person:'Lucas', column:'Feito'}]},
+  {id:'sandbox', name:'Sandbox de inovação', org:'Consórcio Vale do Cedro', owner:'Leo', stage:'Diagnóstico', start:'2026-11-03', end:'2026-11-27', idle:4, value:96000,
+   contact:'Fernanda Dias', role:'Coordenadora do programa', entries:[
+    ['receita',32000,'2026-11-04','2026-11-05'],['receita',64000,'2026-12-02',null],['custo',18000,'2026-11-06','2026-11-06'],['custo',10800,'2026-11-26',null]],
+   tasks:[
+    {name:'Confirmar lista de órgãos participantes', person:'Ricardo', column:'Aguardando', due:'2026-11-23', ball:'Fernanda Dias · cliente', since:'2026-11-12'},
+    {name:'Mapear requisitos de entrada', person:'Leo', column:'Fazendo', due:'2026-11-26', ball:'Leo', since:'2026-11-13'},
+    {name:'Preparar formulário de adesão', person:'Leo', column:'Para depois'}]},
+  {id:'dados', name:'Plano de governança de dados', org:'Instituto Serra Norte', owner:'Ricardo', stage:'Diagnóstico', start:'2026-11-09', end:'2026-12-04', idle:1, value:84000,
+   contact:'André Nunes', role:'Coordenador de TIC', entries:[
+    ['receita',28000,'2026-11-12','2026-11-12'],['receita',56000,'2026-12-04',null],['custo',8400,'2026-11-13','2026-11-13']],
+   tasks:[
+    {name:'Consolidar inventário de bases', person:'Ricardo', column:'Fazendo', due:'2026-11-26', ball:'Ricardo', since:'2026-11-15'},
+    {name:'Revisar governança atual', person:'Lucas', column:'A fazer', due:'2026-11-27'},
+    {name:'Validar diagnóstico', person:'Ricardo', column:'Para depois'}]}
+];
+const dayMs = 86400000;
+const dateNumber = date => Date.parse(date + 'T00:00:00Z') / dayMs;
+const diff = (later, earlier) => dateNumber(later) - dateNumber(earlier);
+const shortDate = date => date.slice(8) + '/' + date.slice(5,7);
+const dayText = days => days === 1 ? '1 dia' : days + ' dias';
+const money = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const fmt = value => money.format(value);
+const percent = value => new Intl.NumberFormat('pt-BR',{style:'percent',maximumFractionDigits:0}).format(value);
+const openTask = task => task.column !== 'Feito';
+const late = task => openTask(task) && task.due && task.due < asOf;
+const wait = task => task.column === 'Aguardando';
+const waitingFor = task => task.ball ? task.ball + ' há ' + dayText(diff(asOf,task.since)) : 'Bola não registrada';
+const cash = p => {
+  const add = predicate => p.entries.filter(predicate).reduce((total,entry) => total + entry[1],0);
+  const cost = add(([type]) => type === 'custo');
+  const overdue = add(([type,,due,paid]) => type === 'receita' && due < asOf && !paid);
+  return {cost, overdue, margin:p.value-cost, used:cost/p.value,
+    received:add(([type,,,paid]) => type === 'receita' && paid),
+    pending:add(([type,,,paid]) => type === 'receita' && !paid)};
+};
+const taskAlert = task => late(task) || task.urgent || wait(task) || task.blocked;
+const alertsFor = p => {
+  const items = p.tasks.filter(task => openTask(task) && taskAlert(task)).map(task => ({
+    p, task, person:task.person,
+    title:task.name, kind:late(task) ? 'Atrasada' : wait(task) ? 'Aguardando' : task.blocked ? 'Dependência' : 'Urgente',
+    tone:late(task) || task.urgent ? 'risk':'wait',
+    category:'task', score:task.urgent ? 0 : late(task) ? 1 : wait(task) ? 3 : 4,
+    explanation:task.blocked ? 'Espera: ' + task.blocked : waitingFor(task)
+  }));
+  const financial = cash(p);
+  if(financial.overdue) items.push({
+    p,task:null,person:p.owner,title:'Acompanhar recebimento vencido',kind:'Recebimento vencido',tone:'risk',
+    category:'cash',score:2,explanation:fmt(financial.overdue) + ' vencidos e em aberto'
+  });
+  return items.sort((a,b) => a.score-b.score);
+};
+const avatar = person => '<span aria-hidden="true" class="avatar '+person.toLowerCase()+'">'+person.slice(0,1)+'</span>';
+const chip = (label,tone='') => '<span class="chip '+tone+'">'+label+'</span>';
+const stat = (label,value,tone='') => '<div class="stat '+tone+'"><span>'+label+'</span><b>'+value+'</b></div>';
+const buildTask = (task,index) => {
+  const tags = [
+    late(task) ? chip('Atrasada','risk') : '',openTask(task) && task.urgent ? chip('Urgente','risk'):'',
+    task.blocked ? chip('Dependência','wait'):''
+  ].join('');
+  return '<div id="task-'+index+'" class="task-row"><strong>'+task.name+'</strong>'+
+    '<small>'+task.column+' · Responsável: '+task.person+(task.due ? ' · Prazo: '+shortDate(task.due):'')+'</small>'+
+    (tags ? '<div class="task-tags">'+tags+'</div>':'')+
+    (task.ball ? '<small>Bola com '+waitingFor(task)+'</small>':'')+
+    (task.blocked ? '<small>Espera: '+task.blocked+'</small>':'')+'</div>';
+};
+const dialog = document.querySelector('dialog');
+function openProject(id,taskIndex=-1,section='') {
+  const p = projects.find(project => project.id === id);
+  const c = cash(p);
+  dialog.innerHTML = '<header class="detail-top"><span class="eyebrow">'+p.stage+'</span><h2 id="detail-title">'+p.name+'</h2><p>'+p.org+' · Dono: '+p.owner+'</p>'+
+    '<form method="dialog"><button class="plain" autofocus>Fechar</button></form></header>'+
+    '<div class="detail-content">'+
+    '<section class="detail-section"><h3>Prazos</h3><div class="stats">'+stat('Início',shortDate(p.start))+stat('Prazo do projeto',shortDate(p.end))+stat('Sem movimento',dayText(p.idle))+'</div></section>'+
+    '<section class="detail-section"><h3>Tarefas</h3><div class="columns">'+columns.map(column => '<div><b>'+p.tasks.filter(task => task.column===column).length+'</b>'+column+'</div>').join('')+'</div>'+p.tasks.map(buildTask).join('')+'</section>'+
+    '<section class="detail-section" id="financeiro"><h3>Financeiro</h3><div class="stats">'+stat('Valor contratado',fmt(p.value))+stat('Custos lançados',fmt(c.cost))+stat('Contratado consumido por custos',percent(c.used))+stat('Margem atual',fmt(c.margin))+stat('Recebido',fmt(c.received))+stat('A receber',fmt(c.pending))+stat('Recebimento vencido e não pago',fmt(c.overdue),c.overdue ? 'risk':'')+'</div><p class="detail-info">Margem atual = valor contratado − custos lançados, pagos ou em aberto.</p></section>'+
+    '<section class="detail-section"><h3>Contato no órgão</h3><p class="contact"><b>'+p.contact+'</b><span>'+p.role+'</span></p></section></div>';
+  if (!dialog.open) dialog.showModal();
+  dialog.scrollTop = 0;
+  const target = section ? dialog.querySelector('#'+section) : taskIndex >= 0 ? dialog.querySelector('#task-'+taskIndex) : null;
+  if(target) dialog.scrollTop = target.getBoundingClientRect().top - dialog.getBoundingClientRect().top - dialog.querySelector('.detail-top').offsetHeight - 9;
+}
+dialog.addEventListener('click',ev => { if(ev.target === dialog && ev.clientX < dialog.getBoundingClientRect().left) dialog.close(); });
+const controls = document.querySelector('#controls');
+const canvas = document.querySelector('#canvas');
+const projectsWithAlerts = projects.map(p=>({p,alerts:alertsFor(p)}));
+const allAlerts = projectsWithAlerts.flatMap(item=>item.alerts).sort((a,b)=>a.score-b.score);
+const taskIndex = item => item.task ? item.p.tasks.indexOf(item.task) : -1;
+const attrs = item => ' data-project="'+item.p.id+'" data-task="'+taskIndex(item)+'"'+(item.category==='cash' ? ' data-section="financeiro"':'');
+const projectAttrs = p => ' data-project="'+p.id+'"';
+const empty = message => '<p class="empty surface">'+message+'</p>';
+let filter = 'all';
+let owner = 'all';
+let selected = '';
+const key = item => item.p.id + ':' + taskIndex(item);
+const matchesPerson = person => owner === 'all' || owner === person;
+
+function buildControls(filters, role) {
+  controls.innerHTML = '<div class="filters" aria-label="Filtrar">' + filters.map(([id,label,count]) => 
+    '<button class="filter" data-filter="'+id+'" aria-pressed="'+(id===filter)+'">'+label+' <span>'+count+'</span></button>').join('')+'</div>'+
+    '<label class="owner-select">'+role+' <select class="select" id="person"><option value="all">Todos</option>'+
+    people.map(person => '<option'+(person===owner?' selected':'')+'>'+person+'</option>').join('')+'</select></label>';
+}
+controls.addEventListener('click',ev => {
+  const button = ev.target.closest('[data-filter]');
+  if(!button) return;
+  filter = button.dataset.filter;
+  render();
+  controls.querySelector('[data-filter="'+filter+'"]').focus();
+});
+controls.addEventListener('change',ev => {
+  if(ev.target.id!=='person') return;
+  owner=ev.target.value;
+  render();
+  controls.querySelector('#person').focus();
+});
+canvas.addEventListener('click',ev => {
+  const choice = ev.target.closest('[data-choice]');
+  const target = ev.target.closest('[data-project]');
+  if(choice) {
+    selected = choice.dataset.choice;
+    render();
+    [...canvas.querySelectorAll('[data-choice]')].find(button => button.dataset.choice === selected)?.focus();
+    if(matchMedia('(max-width:760px)').matches) canvas.querySelector('.spotlight')?.scrollIntoView({block:'nearest'});
+  } else if(target) {
+    openProject(target.dataset.project,Number(target.dataset.task ?? -1),target.dataset.section ?? '');
+  }
+});
+
+function renderAction() {
+  const scoped = allAlerts.filter(item=>matchesPerson(item.person));
+  const isWait = item=>item.task && (wait(item.task) || item.task.blocked);
+  const view = scoped.filter(item=>filter==='all' || (filter==='wait' ? isWait(item) : item.category===filter));
+  buildControls([
+    ['all','Todos os alertas',scoped.length],['wait','Aguardando ou travado',scoped.filter(isWait).length],
+    ['cash','Recebimento vencido',scoped.filter(item=>item.category==='cash').length]
+  ],'Responsável');
+  const current = view.find(item=>key(item)===selected) || view[0];
+  if(current) selected=key(current);
+  const queue = view.map(item => '<button class="queue-row" data-choice="'+key(item)+'" aria-pressed="'+(item===current)+'"><span>'+
+    chip(item.kind,item.tone)+'<strong>'+item.title+'</strong><span class="muted">'+item.p.name+'</span></span>'+
+    '<span><span class="person">'+avatar(item.person)+item.person+'</span><span class="muted">'+item.explanation+'</span></span>'+
+    '<span class="arrow" aria-hidden="true">›</span></button>').join('');
+  const spotlight = current ? '<aside class="spotlight" aria-label="Pendência selecionada"><div class="spot-top"><span class="eyebrow">Pendência selecionada</span><h2>'+current.p.name+'</h2><p>'+current.p.org+'</p></div>'+
+    '<div class="spot-body">'+chip(current.kind,current.tone)+'<h3>'+current.title+'</h3><div class="spot-meta">'+
+    '<div><span>'+(current.task?'Responsável pela tarefa':'Responsável pelo projeto')+'</span><strong>'+current.person+'</strong></div>'+
+    '<div><span>'+(current.task?.ball?'Bola com':current.category==='cash'?'Em aberto':current.task?.blocked?'Espera':'Prazo')+'</span><strong>'+
+    (current.task?.ball || current.category==='cash' || current.task?.blocked ? current.explanation.replace(/^Espera: /,'') : current.task?.due ? shortDate(current.task.due) : 'Sem prazo registrado')+'</strong></div>'+
+    '<div><span>Dono do projeto</span><strong>'+current.p.owner+'</strong></div><div><span>Prazo do projeto</span><strong>'+shortDate(current.p.end)+'</strong></div></div>'+
+    '<p>'+current.p.stage+' · '+dayText(current.p.idle)+' sem movimento</p>'+
+    '<button class="plain"'+attrs(current)+'>Abrir ficha do projeto <span aria-hidden="true">↗</span></button></div></aside>' : '';
+  const portfolio=projects.filter(p=>matchesPerson(p.owner) || p.tasks.some(task=>openTask(task) && matchesPerson(task.person)));
+  canvas.innerHTML = (current ? '<div class="action-layout"><section class="queue surface"><div class="queue-head"><h2 class="section-title">Ações que pedem atenção</h2><span class="muted">'+view.length+' '+(view.length===1?'pendência':'pendências')+'</span></div>'+queue+'</section>'+spotlight+'</div>' : empty('Nenhuma pendência para este filtro.'))+
+    (portfolio.length ? '<details class="other-list surface"><summary>Projetos da carteira ('+portfolio.length+')</summary>'+
+    portfolio.map(p=>'<div class="other-row"><button class="plain"'+projectAttrs(p)+'>'+p.name+'</button><span class="muted">'+p.owner+' · Prazo '+shortDate(p.end)+'</span></div>').join('')+'</details>' : '');
+}
+function renderTimeline() {
+  const scoped = projectsWithAlerts.filter(item=>matchesPerson(item.p.owner));
+  const inWindow = date=>date && diff(date,asOf)>=0 && diff(date,asOf)<14;
+  const upcoming = ({p})=>inWindow(p.end) || p.tasks.some(task=>openTask(task) && inWindow(task.due));
+  const view = scoped.filter(item=>filter==='all' || (filter==='alert' ? item.alerts.length : upcoming(item)))
+    .sort((a,b)=>a.p.end.localeCompare(b.p.end));
+  buildControls([
+    ['all','Todos os projetos',scoped.length],['upcoming','Com prazo na janela',scoped.filter(upcoming).length],
+    ['alert','Com pendência',scoped.filter(item=>item.alerts.length).length]
+  ],'Dono do projeto');
+  const cells = Array.from({length:14},(_,i) => {
+    const date=new Date((dateNumber(asOf)+i)*dayMs);
+    const day=date.getUTCDay();
+    const tone=i===0?'now':day===0||day===6?'weekend':'';
+    return {tone, label:date.getUTCDate()};
+  });
+  const position = date=>((diff(date,asOf)+.5)/14)*100;
+  const rows = view.map(({p,alerts})=>{
+    const visibleTasks = p.tasks.filter(task=>openTask(task) && inWindow(task.due));
+    const alert = alerts.find(item=>item.task?.ball || item.category==='cash') || alerts[0];
+    const primary = alert?.task || visibleTasks.slice().sort((a,b)=>a.due.localeCompare(b.due))[0];
+    const context = alert?.category==='cash' ? alert.explanation+' · '+p.owner :
+      primary ? primary.name+' · '+primary.person+(primary.ball && wait(primary) ? ' · '+waitingFor(primary):
+      primary.due ? (late(primary) ? ' · Atrasada desde '+shortDate(primary.due) : ' · '+shortDate(primary.due)) : '') : '';
+    const barStart = inWindow(p.start) ? position(p.start) : 0;
+    const barEnd = inWindow(p.end) ? position(p.end) : 100;
+    return '<div class="time-row"><button class="timeline-project"'+projectAttrs(p)+'><strong>'+p.name+'</strong>'+
+      '<span class="muted">Dono: '+p.owner+' · Prazo '+shortDate(p.end)+'</span><span class="muted">'+p.stage+' · '+dayText(p.idle)+' sem movimento</span></button>'+
+      '<div class="track">'+cells.map(cell=>'<span class="cell '+cell.tone+'"></span>').join('')+
+      '<span class="bar '+(alerts.length?'risk':'')+'" style="left:'+barStart+'%;right:'+(100-barEnd)+'%"></span>'+
+      visibleTasks.map(task=>'<button class="dot '+(task.urgent?'risk':'')+'" style="left:'+position(task.due)+'%"'+projectAttrs(p)+' data-task="'+p.tasks.indexOf(task)+'" title="'+task.name+' · '+task.person+' · '+shortDate(task.due)+'" aria-label="'+task.name+' · '+task.person+' · '+shortDate(task.due)+'"></button>').join('')+
+      (inWindow(p.end)?'<button class="dot project" style="left:'+position(p.end)+'%"'+projectAttrs(p)+' title="Prazo do projeto · '+shortDate(p.end)+'" aria-label="'+p.name+' · Prazo '+shortDate(p.end)+'"></button>':'')+
+      (context?'<button class="date-note '+(alert?.tone||'')+'"'+(alert?.category==='cash'?attrs(alert):projectAttrs(p)+' data-task="'+p.tasks.indexOf(primary)+'"')+' title="'+context+'">'+context+'</button>':'')+'</div></div>';
+  }).join('');
+  canvas.innerHTML = view.length ? '<section class="timeline surface"><div class="timeline-head"><h2 class="section-title">16 a 29 de novembro</h2>'+
+    '<div class="legend"><span><i class="today"></i>Hoje</span><span><i class="task"></i>Prazo de tarefa</span><span><i class="project"></i>Prazo de projeto</span></div></div>'+
+    '<div class="timeline-scroll" tabindex="0" aria-label="Agenda de projetos, com rolagem horizontal"><div class="timeline-grid"><div class="time-header"><div>Projeto</div><div class="days">'+
+    cells.map(cell=>'<span class="day '+cell.tone+'">'+cell.label+'</span>').join('')+'</div></div>'+rows+'</div></div></section>'+
+    '<p class="footnote below-timeline">Selecione um projeto, marcador ou pendência para abrir a ficha.</p>' : empty('Nenhum projeto para este filtro.');
+}
+function renderBoard() {
+  const scoped = allAlerts.filter(item=>matchesPerson(item.person));
+  buildControls([
+    ['all','Todos os alertas',scoped.length],['task','Tarefas com alerta',scoped.filter(item=>item.category==='task').length],
+    ['cash','Recebimento vencido',scoped.filter(item=>item.category==='cash').length]
+  ],'Responsável');
+  const view = scoped.filter(item=>filter==='all' || item.category===filter);
+  canvas.innerHTML='<div class="board">'+people.filter(matchesPerson).map(person=>{
+    const items = view.filter(item=>item.person===person);
+    const quiet = filter==='all' ? projectsWithAlerts.filter(({p,alerts})=>p.owner===person && alerts.length===0) : [];
+    const cards=items.map(item=>'<button class="lane-card"'+attrs(item)+'>'+chip(item.kind,item.tone)+
+      '<h3>'+item.p.name+'</h3><p class="muted">'+item.p.org+'</p>'+
+      '<div class="lane-task"><strong>'+item.title+'</strong>'+item.explanation+'</div>'+
+      '<div class="lane-stats"><span>Dono: '+item.p.owner+'</span><span>Prazo '+shortDate(item.task?.due || item.p.end)+(item.task?.due?' · tarefa':' · projeto')+'</span></div></button>').join('');
+    const healthy=quiet.map(({p})=>'<button class="lane-card"'+projectAttrs(p)+'>'+chip('Sem alertas','ok')+
+      '<h3>'+p.name+'</h3><p class="muted">'+p.org+'</p><div class="lane-stats"><span>Dono: '+p.owner+'</span><span>Prazo '+shortDate(p.end)+'</span></div></button>').join('');
+    return '<section class="lane"><header class="lane-head">'+avatar(person)+'<div><h2>'+person+'</h2><p class="muted">'+items.length+' '+(items.length===1?'alerta':'alertas')+'</p></div></header>'+
+      (cards+healthy || '<p class="empty">Nenhum item neste filtro.</p>')+'</section>';
+  }).join('')+'</div><p class="footnote">Tarefas ficam com seu responsável. Recebimentos vencidos ficam com o dono do projeto.</p>';
+}
+const render = {action:renderAction,timeline:renderTimeline,board:renderBoard}[document.body.dataset.direction];
+render();
+
+</script>
+</body>
+</html>

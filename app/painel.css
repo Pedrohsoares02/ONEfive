@@ -1424,3 +1424,138 @@ dialog.ed-janela::backdrop { background: rgba(42, 21, 69, .4); backdrop-filter: 
 .pn-cartao.aberto { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
 .pn-cartao[role="button"] { cursor: pointer; }
 .pn-cartao[role="button"]:active { cursor: grabbing; }
+
+/* =========================================================================
+   Projetos: a fila de ação e a agenda.
+   A tela pergunta "o que eu resolvo agora", não "onde está cada projeto".
+   O painel escuro usa o --ink da marca: é o roxo que quebra o branco.
+   ========================================================================= */
+.pj-topo { margin-top: 20px; }
+.pj-cortes { display: flex; gap: 6px; flex-wrap: wrap; }
+.pj-corte-b {
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    background: var(--card); border: 1px solid var(--line); border-radius: 9px;
+    padding: 6px 12px; font: inherit; font-size: 13px; color: var(--ink);
+}
+.pj-corte-b:hover { border-color: #CFC7DC; }
+.pj-corte-b span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.pj-corte-b[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.pj-corte-b[aria-pressed="true"] span { color: #D9CCEA; }
+.pj-pessoas { margin-left: auto; }
+
+.pj-selo {
+    display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .02em; padding: 3px 9px; border-radius: 999px;
+    background: rgba(42, 21, 69, .06); color: var(--muted);
+}
+.pj-selo::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pj-selo.risco { background: rgba(201, 20, 94, .1); color: var(--risk); }
+.pj-selo.alerta { background: #FBF3DF; color: var(--warn); }
+
+.pj-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .pj-layout { grid-template-columns: 1fr; } }
+
+.pj-fila { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.pj-linha {
+    display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) 14px; gap: 14px;
+    align-items: center; width: 100%; text-align: left; cursor: pointer; position: relative;
+    background: none; border: 0; border-bottom: 1px solid var(--line);
+    padding: 15px 18px; font: inherit; color: inherit;
+}
+.pj-linha:last-child { border-bottom: 0; }
+.pj-linha:hover, .pj-linha[aria-pressed="true"] { background: #F7F2FB; }
+.pj-linha[aria-pressed="true"]::before {
+    content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--ink);
+}
+.pj-linha b { display: block; font-weight: 500; font-size: 14.5px; line-height: 1.3; margin: 7px 0 2px; }
+.pj-linha small { display: block; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+.pj-pessoa { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.pj-linha__seta { color: var(--muted); font-size: 17px; }
+
+/* o foco: a pendência escolhida, em roxo profundo */
+.pj-foco {
+    position: sticky; top: 84px; border-radius: 14px; overflow: hidden;
+    background: var(--ink); color: #fff;
+    box-shadow: 0 18px 40px -24px rgba(42, 21, 69, .7);
+}
+@media (max-width: 900px) { .pj-foco { position: static; } }
+.pj-foco__topo { padding: 22px 22px 18px; }
+.pj-foco__cod { margin: 0 0 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: #C9B8DE; }
+.pj-foco h2 {
+    font-family: var(--display); font-size: 22px; font-weight: 600;
+    letter-spacing: -.035em; line-height: 1.15; margin: 0;
+}
+.pj-foco__org { margin: 5px 0 0; font-size: 13px; color: #D9CCEA; }
+.pj-foco__corpo { padding: 18px 22px 22px; background: rgba(255, 255, 255, .06); border-top: 1px solid rgba(255, 255, 255, .12); }
+.pj-foco .pj-selo { background: rgba(255, 255, 255, .12); color: #fff; }
+.pj-foco .pj-selo.risco { background: rgba(230, 24, 111, .28); color: #FFD3E4; }
+.pj-foco .pj-selo.alerta { background: rgba(240, 180, 41, .22); color: #FFE5A8; }
+.pj-foco h3 { font-size: 16px; font-weight: 500; margin: 11px 0 15px; line-height: 1.3; }
+.pj-foco__dados {
+    margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    padding-bottom: 15px; border-bottom: 1px solid rgba(255, 255, 255, .14);
+}
+.pj-foco__dados dt { font-size: 11.5px; color: #C9B8DE; margin-bottom: 2px; }
+.pj-foco__dados dd { margin: 0; font-size: 13.5px; font-weight: 500; line-height: 1.35; }
+.pj-foco__pe { margin: 13px 0 0; font-size: 12.5px; color: #D9CCEA; }
+.pj-foco__ir { display: inline-block; margin-top: 16px; text-decoration: none; }
+
+/* a agenda de duas semanas */
+.pj-agenda { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.pj-agenda__cab {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    flex-wrap: wrap; padding: 16px 19px;
+}
+.pj-agenda__cab h2 { font-family: var(--display); font-size: 17px; font-weight: 600; letter-spacing: -.03em; margin: 0; }
+.pj-legenda { margin: 0; display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); }
+.pj-legenda i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: middle; }
+.pj-legenda .hoje { background: #E7DAF3; }
+.pj-legenda .tarefa { background: var(--dados); transform: rotate(45deg); }
+.pj-legenda .projeto { background: var(--ink); border-radius: 50%; }
+
+.pj-rolar { overflow-x: auto; }
+.pj-grade { min-width: 820px; }
+.pj-cabecalho, .pj-raia { display: grid; grid-template-columns: 240px minmax(0, 1fr); }
+.pj-cabecalho {
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: var(--paper); color: var(--muted); font-size: 11.5px;
+}
+.pj-cabecalho > div:first-child { padding: 10px 17px; font-weight: 500; }
+.pj-dias, .pj-trilho { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); position: relative; }
+.pj-dia { display: grid; place-items: center; min-height: 36px; border-left: 1px solid var(--line); font-family: var(--mono); font-size: 11px; }
+.pj-dia.hoje, .pj-celula.hoje { background: #EFE5F8; }
+.pj-dia.fds, .pj-celula.fds { background: rgba(42, 21, 69, .03); }
+.pj-raia { border-bottom: 1px solid var(--line); min-height: 86px; }
+.pj-raia:last-child { border-bottom: 0; }
+.pj-raia__nome { display: grid; gap: 3px; align-content: center; padding: 12px 17px; text-decoration: none; color: inherit; }
+.pj-raia__nome:hover { background: #F7F2FB; }
+.pj-raia__nome b { font-weight: 500; font-size: 14px; line-height: 1.25; }
+.pj-raia__nome small { font-size: 12px; color: var(--muted); }
+.pj-celula { border-left: 1px solid var(--line); }
+.pj-barra { position: absolute; top: 24px; height: 5px; border-radius: 99px; background: #CDBBE0; pointer-events: none; }
+.pj-barra.risco { background: #E08BAE; }
+.pj-marca {
+    position: absolute; top: 26px; width: 10px; height: 10px;
+    translate: -50% -50%; rotate: 45deg; background: var(--dados);
+}
+.pj-marca.risco { background: var(--risk); }
+.pj-marca.projeto { rotate: none; border-radius: 50%; background: var(--ink); }
+.pj-nota {
+    position: absolute; top: 46px; left: 9px; max-width: calc(100% - 18px);
+    padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--card);
+    font-size: 11.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pj-nota.risco { color: var(--risk); }
+.pj-nota.alerta { color: var(--warn); }
+
+/* a carteira inteira, recolhida: é onde moram os concluídos */
+.pj-carteira { margin-top: 18px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.pj-carteira summary { cursor: pointer; padding: 13px 18px; font-weight: 500; font-size: 13.5px; }
+.pj-carteira summary:hover { background: rgba(42, 21, 69, .03); }
+.pj-carteira__linha {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 11px 18px; border-top: 1px solid var(--line); text-decoration: none; color: inherit;
+}
+.pj-carteira__linha:hover { background: #F7F2FB; }
+.pj-carteira__linha b { display: block; font-weight: 500; font-size: 13.5px; }
+.pj-carteira__linha small { font-size: 12.5px; color: var(--muted); }
