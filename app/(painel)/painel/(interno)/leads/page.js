@@ -12,10 +12,7 @@ export const instant = false;
 
 export const metadata = { title: 'Leads — Painel ONEfive' };
 
-export default async function PaginaLeads({ searchParams }) {
-  // No Next 16 searchParams é assíncrono.
-  const { novo } = await searchParams;
-
+export default async function PaginaLeads() {
   const cliente = await criarClienteServidor();
   await exigirUsuario(cliente);
 
@@ -42,7 +39,6 @@ export default async function PaginaLeads({ searchParams }) {
           etapas={ETAPAS_LEAD}
           pessoas={pessoas}
           clientes={clientes}
-          abrirAoCarregar={novo === '1'}
           rotulo="Novo lead"
         />
       </div>

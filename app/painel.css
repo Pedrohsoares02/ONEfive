@@ -594,57 +594,6 @@ dialog.pn-janela::backdrop { background: rgba(42, 21, 69, .42); backdrop-filter:
     .pn-contato__acoes { margin-left: 0; }
 }
 
-/* ---------- paleta de comandos ---------- */
-.pn-buscar {
-    display: flex; align-items: center; gap: 10px; min-width: 200px;
-    font: inherit; font-size: 13.5px; color: var(--muted); cursor: pointer;
-    background: var(--card); border: 1px solid var(--line); border-radius: 9px; padding: 7px 11px;
-}
-.pn-buscar:hover { border-color: #CFC7DC; }
-.pn-buscar kbd, .pn-paleta kbd {
-    font-family: var(--mono); font-size: 10.5px; color: var(--muted);
-    background: var(--paper); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
-}
-.pn-buscar kbd { margin-left: auto; }
-
-dialog.pn-paleta {
-    border: 0; padding: 0; border-radius: 14px;
-    width: min(620px, calc(100vw - 32px)); margin-top: 12vh;
-    background: var(--card); color: var(--ink); font-family: var(--corpo);
-    box-shadow: 0 30px 80px -24px rgba(42, 21, 69, .55);
-}
-dialog.pn-paleta::backdrop { background: rgba(42, 21, 69, .38); backdrop-filter: blur(3px); }
-.pn-paleta__busca {
-    display: flex; align-items: center; gap: 12px;
-    padding: 16px 20px; border-bottom: 1px solid var(--line); color: var(--muted);
-}
-.pn-paleta__busca input {
-    flex: 1; font: inherit; font-size: 16px; color: var(--ink);
-    background: none; border: 0; outline: none;
-}
-/* sem contorno de foco: é o único campo da janela, e o anel rosa lia como erro */
-.pn-paleta__busca input:focus-visible { outline: none; }
-.pn-paleta__lista { list-style: none; margin: 0; padding: 7px; max-height: 48vh; overflow: auto; }
-.pn-paleta__grupo {
-    font-family: var(--mono); font-size: 9.5px; text-transform: uppercase;
-    letter-spacing: .16em; color: var(--muted); margin: 0; padding: 11px 13px 5px;
-}
-.pn-paleta__item {
-    display: flex; align-items: center; gap: 12px; width: 100%;
-    padding: 10px 13px; border: 0; border-radius: 9px; cursor: pointer;
-    font: inherit; font-size: 14px; color: inherit; background: none; text-align: left;
-}
-.pn-paleta__item[aria-selected="true"] { background: #F1EBF8; }
-.pn-paleta__item em { font-style: normal; color: var(--muted); font-size: 12.5px; margin-left: 8px; }
-.pn-paleta__item kbd { margin-left: auto; }
-.pn-paleta__pe {
-    display: flex; gap: 16px; padding: 10px 20px;
-    border-top: 1px solid var(--line); font-size: 11.5px; color: var(--muted);
-}
-.pn-paleta__nada { padding: 26px 20px; text-align: center; color: var(--muted); font-size: 14px; }
-
-@media (max-width: 860px) { .pn-buscar { min-width: 0; } .pn-buscar__texto { display: none; } }
-
 /* ---------- há quanto tempo isto não se mexe ---------- */
 .pn-silencio {
     display: inline-block; margin-top: 8px;
